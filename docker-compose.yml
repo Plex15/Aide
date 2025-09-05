@@ -1,0 +1,43 @@
+# Aide/docker-compose.yml
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+      - "5037:5037"
+      - "5555:5555"
+    network_mode: "host"
+    privileged: true
+    volumes:
+      - ./frontend:/app/
+      - /app/node_modules
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      - ANDROID_ADB_SERVER_ADDRESS=host.docker.internal
+    # This ensures the hostname resolves correctly.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  analytics:
+    build:
+      context: ./analytics
+      dockerfile: Dockerfile
+    volumes:
+      - ./analytics:/app
+      - /app/__pycache__
+      - ./frontend:/app/frontend_data
+  
+  # volumes:
+  #   db_data:
+
+  # emulator:
+    #  build: 
+      #  context: ./database
+      #  dockerfile: Dockerfile 
+  #   volumes:
+  #     - ./database:/app
+  #     - /app/data 
