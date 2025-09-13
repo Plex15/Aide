@@ -1,37 +1,47 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import {useState} from 'react';
+import {Button,TouchableOpacity,StyleSheet, Text, View} from 'react-native';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+export type Props = {
+  name: string;
+  baseEnthusiasmLevel?: number;
+};
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+function Hello({name, baseEnthusiasmLevel = 0}: Props) {
+  const [enthusiasmLevel, setEnthusiasmLevel] = useState(
+    baseEnthusiasmLevel,
   );
-}
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+  const onIncrement = () =>
+    setEnthusiasmLevel(enthusiasmLevel + 1);
+  const onDecrement = () =>
+    setEnthusiasmLevel(
+      enthusiasmLevel > 0 ? enthusiasmLevel - 1 : 0,
+    );
+
+  const getExclamationMarks = (numChars: number) =>
+    numChars > 0 ? Array(numChars + 1).join('!') : '';
 
   return (
     <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
+      <Text style={styles.greeting}>
+        Hello {name}
+        {getExclamationMarks(enthusiasmLevel)}
+      </Text>
+      <View>
+        <TouchableOpacity
+          key={"increment"}
+	  onPress={onIncrement}
+	  style={styles.button}>
+	  <Text style={styles.greeting}>INCREASE</Text>
+        </TouchableOpacity>>
+
+        <TouchableOpacity
+          key={"decrement"}
+	  onPress={onDecrement}
+	  style={styles.button}>
+	  <Text style={styles.greeting}>DECREASE</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -39,7 +49,28 @@ function AppContent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'orange',
+  },
+  greeting: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    margin: 16,
+    color: 'white',
+  },
+  button: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 50,
+    alignSelf: 'flex-start',
+    marginHorizontal: '1%',
+    marginBottom: 10,
+    minWidth: '70%',
+    textAlign: 'center',
+    backgroundColor: 'rgba(120,13,13,0.8)',
+
   },
 });
 
-export default App;
+export default Hello;

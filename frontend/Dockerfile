@@ -2,13 +2,13 @@ FROM node:lts-trixie-slim
 
 WORKDIR /app
 
-RUN apt update && apt upgrade
+RUN apt update -y && apt upgrade -y
 
 ENV ANDROID_HOME=/opt/android/sdk
 ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
 
 # Install Java, download tools, and the Android SDK in a single layer
-RUN apt-get update && \
+RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
     openjdk-21-jdk \
     wget \
@@ -30,8 +30,12 @@ RUN apt-get update && \
     apt install ./java-17.deb && \
     rm ./java-17.deb
 
+#EXPOSE 5037
+
 COPY package*.json ./
 
 RUN npm install
 
 COPY . .
+
+#CMD ["npx", "react-native", "start", "--host", "0.0.0.0"]
