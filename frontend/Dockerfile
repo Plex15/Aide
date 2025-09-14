@@ -11,6 +11,7 @@ ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-too
 RUN apt-get -y update && \
     apt-get install -y --no-install-recommends \
     openjdk-21-jdk \
+    curl \
     wget \
     unzip \
     && \
@@ -34,8 +35,9 @@ RUN apt-get -y update && \
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install  
 
 COPY . .
 
 #CMD ["npx", "react-native", "start", "--host", "0.0.0.0"]
+ 

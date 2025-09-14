@@ -1,11 +1,11 @@
-import {useState} from 'react';
+import React,{useState} from 'react';
 import {Button,TouchableOpacity,StyleSheet, Text, View} from 'react-native';
 
 export type Props = {
   name: string;
   baseEnthusiasmLevel?: number;
 };
-
+// current main function
 function Hello({name, baseEnthusiasmLevel = 0}: Props) {
   const [enthusiasmLevel, setEnthusiasmLevel] = useState(
     baseEnthusiasmLevel,
@@ -19,7 +19,7 @@ function Hello({name, baseEnthusiasmLevel = 0}: Props) {
     );
 
   const getExclamationMarks = (numChars: number) =>
-    numChars > 0 ? Array(numChars + 1).join('!') : '';
+    numChars > 0 ? Array(numChars + 1).join('$') : '';
 
   return (
     <View style={styles.container}>
@@ -32,8 +32,8 @@ function Hello({name, baseEnthusiasmLevel = 0}: Props) {
           key={"increment"}
 	  onPress={onIncrement}
 	  style={styles.button}>
-	  <Text style={styles.greeting}>INCREASE</Text>
-        </TouchableOpacity>>
+	  <Text style={styles.greeting}>Lets goooooo</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           key={"decrement"}
@@ -68,9 +68,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     minWidth: '70%',
     textAlign: 'center',
-    backgroundColor: 'rgba(120,13,13,0.8)',
-
+    backgroundColor: 'rgba(122, 59, 20, 0.8)',
+    
   },
 });
 
+// main function define 
 export default Hello;
