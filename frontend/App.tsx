@@ -1,5 +1,9 @@
+// Keep App.tsx minimal as possible
+// most properties/functions should be in /src folder
 import React,{useState} from 'react';
 import {Button,TouchableOpacity,StyleSheet, Text, View} from 'react-native';
+import { User,PI} from './src/Core/schedule'; 
+
 
 export type Props = {
   name: string;
@@ -12,7 +16,7 @@ function Hello({name, baseEnthusiasmLevel = 0}: Props) {
   );
 
   const onIncrement = () =>
-    setEnthusiasmLevel(enthusiasmLevel + 1);
+    setEnthusiasmLevel(10);
   const onDecrement = () =>
     setEnthusiasmLevel(
       enthusiasmLevel > 0 ? enthusiasmLevel - 1 : 0,
@@ -32,7 +36,7 @@ function Hello({name, baseEnthusiasmLevel = 0}: Props) {
           key={"increment"}
 	  onPress={onIncrement}
 	  style={styles.button}>
-	  <Text style={styles.greeting}>Lets goooooo</Text>
+	  <Text style={styles.greeting}>lty</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
