@@ -9,15 +9,18 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - ./frontend:/app/
+      - ./frontend:/app/:cached
       - /app/node_modules
     environment:
       - ANDROID_ADB_SERVER_ADDRESS=host.docker.internal
+      - CHOKIDAR_USEPOLLING=true
     # This ensures the hostname resolves correctly.
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    privileged: true
     #command: npx react-native start --host 0.0.0.0
     command: sleep infinity
+  
   analytics:
     build:
       context: ./analytics
