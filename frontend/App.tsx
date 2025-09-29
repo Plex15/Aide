@@ -1,81 +1,76 @@
 // Keep App.tsx minimal as possible
 // most properties/functions should be in /src folder
 import React,{useState} from 'react';
-import {Button,TouchableOpacity,StyleSheet, Text, View} from 'react-native';
-import { User,PI} from './src/Core/schedule'; 
+import {PI} from './src/Core/schedule'; 
+import {UI} from './main_ui'
+import {Dimensions}from 'react-native';
 
+const { width } = Dimensions.get('window');
 
 export type Props = {
   name: string;
   baseEnthusiasmLevel?: number;
 };
-// current main function
-function Hello({name, baseEnthusiasmLevel = 0}: Props) {
-  const [enthusiasmLevel, setEnthusiasmLevel] = useState(
-    baseEnthusiasmLevel,
-  );
 
-  const onIncrement = () =>
-    setEnthusiasmLevel(10);
+// Main AIDE app component
+function Hello({ name, baseEnthusiasmLevel = 0 }: Props) {
+  const [enthusiasmLevel, setEnthusiasmLevel] = useState(baseEnthusiasmLevel);
+  const [menuOpen, setMenuOpen] = useState(false);
+  
+  // Task completion states
+  const [tasks, setTasks] = useState([
+    { id: 1, text: 'GO TO GYM', completed: false },
+    { id: 2, text: 'READ BOOK', completed: false },
+    { id: 3, text: 'READ NEWSPAPERS', completed: false },
+    { id: 4, text: 'PRACTICE THE SKILLS', completed: false },
+    { id: 5, text: 'TALK TO YOUR PARENTS', completed: false },
+    { id: 6, text: 'PLAY FOOTBALL', completed: false },
+    { id: 7, text: 'STUDY', completed: false },
+    { id: 8, text: 'DINNER', completed: false },
+    { id: 9, text: 'READ BOOK', completed: false },
+    { id: 10, text: 'DRINK WATER BEFORE BED', completed: false },
+    { id: 11, text: 'SLEEP', completed: false },
+  ]);
+
+  // Weekly progression data (mock data for bars)
+  const weeklyData = [
+    { day: 'Mon', value: 60 },
+    { day: 'Tue', value: 45 },
+    { day: 'Wed', value: 75 },
+    { day: 'Thu', value: 40 },
+    { day: 'Fri', value: 85 },
+    { day: 'Sat', value: 55 },
+    { day: 'Sun', value: 100 },
+  ];
+
+  const onIncrement = () => setEnthusiasmLevel(enthusiasmLevel + 1);
+  
   const onDecrement = () =>
-    setEnthusiasmLevel(
-      enthusiasmLevel > 0 ? enthusiasmLevel - 1 : 0,
-    );
+    setEnthusiasmLevel(enthusiasmLevel > 0 ? enthusiasmLevel - 1 : 0);
 
-  const getExclamationMarks = (numChars: number) =>
-    numChars > 0 ? Array(numChars + 1).join('$') : '';
+  const toggleTask = (id: number) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.greeting}>
-        Hello {name}
-        {getExclamationMarks(enthusiasmLevel)}
-      </Text>
-      <View>
-        <TouchableOpacity
-          key={"increment"}
-	  onPress={onIncrement}
-	  style={styles.button}>
-	  <Text style={styles.greeting}>lty</Text>
-        </TouchableOpacity>
+  const completedTasks = tasks.filter(t => t.completed).length;
+  const totalTasks = tasks.length;
+  const progressPercentage = (completedTasks / totalTasks) * 100;
 
-        <TouchableOpacity
-          key={"decrement"}
-	  onPress={onDecrement}
-	  style={styles.button}>
-	  <Text style={styles.greeting}>DECREASE</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+  return(<UI
+    name = {name} 
+    enthusiasmLevel = {enthusiasmLevel}
+    tasks = {tasks}
+    weeklyData = {weeklyData}
+    setMenuOpen = {setMenuOpen}
+    toggleTask  = {toggleTask}
+    completedTasks = {completedTasks}
+    totalTasks = {totalTasks}
+    menuOpen = {menuOpen}
+    />
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'orange',
-  },
-  greeting: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    margin: 16,
-    color: 'white',
-  },
-  button: {
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderRadius: 50,
-    alignSelf: 'flex-start',
-    marginHorizontal: '1%',
-    marginBottom: 10,
-    minWidth: '70%',
-    textAlign: 'center',
-    backgroundColor: 'rgba(122, 59, 20, 0.8)',
-    
-  },
-});
 
 // main function define 
 export default Hello;
