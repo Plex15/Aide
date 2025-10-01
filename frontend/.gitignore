@@ -81,4 +81,4 @@ yarn-error.log
 # !android/app/build/outputs/
 # !android/app/build/outputs/apk/
 # !android/app/build/outputs/apk/debug/
-!android/app/build/outputs/apk/debug/app-debug.apk
+# !android/app/build/outputs/apk/debug/app-debug.apk
