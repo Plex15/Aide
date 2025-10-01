@@ -1,6 +1,8 @@
 import React,{useState} from 'react';
 import {TouchableOpacity, Text, View,  ScrollView,} from 'react-native';
 import {styles} from "./style"
+import './schedule'; 
+import { onDisplayNotification } from './schedule';
 
 export type UIprop = {
     name: string,
@@ -102,7 +104,7 @@ export  function UI({
                 <TouchableOpacity
                   key={task.id}
                   style={styles.taskItem}
-                  onPress={() => toggleTask(task.id)}
+                  onPress={() => console.log(task.id)}
                 >
                   <View style={[
                     styles.taskCheckbox,
@@ -133,7 +135,10 @@ export  function UI({
         <View style={styles.topActivitiesSection}>
           <View style={styles.topActivitiesHeader}>
             <Text style={styles.topActivitiesTitle}>TOP ACTIVITIES</Text>
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity 
+               style={styles.addButton}
+               onPress={onDisplayNotification}
+               >
               <Text style={styles.addButtonText}>+</Text>
             </TouchableOpacity>
           </View>

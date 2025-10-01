@@ -31,13 +31,8 @@ RUN apt-get -y update && \
     apt install ./java-17.deb && \
     rm ./java-17.deb
 
-#EXPOSE 5037
-
 COPY package*.json ./
 
 RUN npm install  
 
 COPY . .
-
-#CMD ["npx", "react-native", "start", "--host", "0.0.0.0"]
- 

@@ -1,9 +1,9 @@
 // Keep App.tsx minimal as possible
 // most properties/functions should be in /src folder
 import React,{useState} from 'react';
-import {PI} from './src/Core/schedule'; 
 import {UI} from './main_ui'
 import {Dimensions}from 'react-native';
+//import 'react-native/Libraries/Core/Devtools/';
 
 const { width } = Dimensions.get('window');
 
@@ -34,7 +34,7 @@ function Hello({ name, baseEnthusiasmLevel = 0 }: Props) {
 
   // Weekly progression data (mock data for bars)
   const weeklyData = [
-    { day: 'Mon', value: 60 },
+    { day: 'Mon', value: 1 },
     { day: 'Tue', value: 45 },
     { day: 'Wed', value: 75 },
     { day: 'Thu', value: 40 },
@@ -43,6 +43,7 @@ function Hello({ name, baseEnthusiasmLevel = 0 }: Props) {
     { day: 'Sun', value: 100 },
   ];
 
+  // not used i think
   const onIncrement = () => setEnthusiasmLevel(enthusiasmLevel + 1);
   
   const onDecrement = () =>
@@ -53,7 +54,7 @@ function Hello({ name, baseEnthusiasmLevel = 0 }: Props) {
       task.id === id ? { ...task, completed: !task.completed } : task
     ));
   };
-
+  
   const completedTasks = tasks.filter(t => t.completed).length;
   const totalTasks = tasks.length;
   const progressPercentage = (completedTasks / totalTasks) * 100;
