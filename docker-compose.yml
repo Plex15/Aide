@@ -13,7 +13,7 @@ services:
       - /app/node_modules
     environment:
       - ANDROID_ADB_SERVER_ADDRESS=host.docker.internal
-      - CHOKIDAR_USEPOLLING=true
+      # - CHOKIDAR_USEPOLLING=true
     # This ensures the hostname resolves correctly.
     extra_hosts:
       - "host.docker.internal:host-gateway"

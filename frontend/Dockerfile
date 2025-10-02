@@ -24,6 +24,8 @@ RUN apt-get -y update && \
     # Use sdkmanager to install platform-tools (for adb) and accept licenses
     yes | sdkmanager --licenses > /dev/null && \
     sdkmanager "platform-tools" && \
+    sdkmanager "build-tools;35.0.0" && \
+    sdkmanager "ndk;27.0.11902837" && \
     # Clean up apt cache to keep the image smaller
     rm -rf /var/lib/apt/lists/* && \
     cd /app && \
