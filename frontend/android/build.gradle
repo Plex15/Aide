@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        buildToolsVersion = "34.0.0"  // Use the correct build tools for SDK 34
+        buildToolsVersion = "35.0.0"  // Use the correct build tools for SDK 34
         minSdkVersion = 24
         compileSdkVersion = 34      // Use the latest stable SDK
         targetSdkVersion = 34       // Match the compile SDK

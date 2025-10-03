@@ -104,7 +104,7 @@ export  function UI({
                 <TouchableOpacity
                   key={task.id}
                   style={styles.taskItem}
-                  onPress={() => console.log(task.id)}
+                  onPress={() => toggleTask(task.id)}
                 >
                   <View style={[
                     styles.taskCheckbox,
