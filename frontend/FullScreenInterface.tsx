@@ -2,12 +2,12 @@
 // Later will be configured to change according to Preset data !! 
 
 import React from 'react';
-import { View, Text, StyleSheet,TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 
 const FullScreenInterface = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Give me your Data </Text>
+      <Text style={styles.title}>Give me your Data</Text>
       
       <TextInput
         style={styles.input}

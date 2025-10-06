@@ -9,7 +9,7 @@ const config = {
   // Explicitly tell Metro to look at the 'src' directory.
   watchFolders: [
     path.resolve(__dirname, 'src'),
-    path.resolve(__dirname, 'src/Core')
+    //path.resolve(__dirname, 'src/Core')
   ],
   // --- END KEY PART ---
 };
