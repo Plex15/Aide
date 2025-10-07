@@ -21,7 +21,8 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: android.os.Bundle?) {
     
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-    super.onCreate(savedInstanceState)
+    //super.onCreate(savedInstanceState) 
+    super.onCreate(null) // for navigation extention
   }
 
   override fun createReactActivityDelegate(): ReactActivityDelegate =

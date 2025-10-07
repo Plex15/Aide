@@ -1,8 +1,14 @@
-import React,{useState} from 'react';
+import React from 'react';
 import {TouchableOpacity, Text, View,  ScrollView,} from 'react-native';
 import {styles} from "./style"
-import './schedule'; 
+// import './schedule'; 
 import { onDisplayNotification } from './schedule';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from './preset_ui';
+import {useNavigation,} from '@react-navigation/native';
+
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 export type UIprop = {
     name: string,
@@ -28,6 +34,7 @@ export  function UI({
     menuOpen
 }:UIprop)
 {  
+  const navi = useNavigation<NavigationProps>();
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -146,13 +153,14 @@ export  function UI({
 
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navButton}>
+          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate(navi.goBack())} >
             <View style={styles.homeIcon}>
               <View style={styles.homeIconRoof} />
               <View style={styles.homeIconBase} />
+              
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton}>
+          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate('Preset')}>
             <View style={styles.editIcon}>
               <View style={styles.editIconPencil} />
               <View style={styles.editIconSquare} />
