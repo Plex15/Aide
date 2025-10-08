@@ -15,13 +15,11 @@ RUN apt-get -y update && \
     wget \
     unzip \
     && \
-    # Download and set up the Android command-line tools
     mkdir -p ${ANDROID_HOME} && \
     wget -O cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip && \
     unzip cmdline-tools.zip -d ${ANDROID_HOME}/cmdline-tools && \
     mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest && \
     rm cmdline-tools.zip && \
-    # Use sdkmanager to install platform-tools (for adb) and accept licenses
     yes | sdkmanager --licenses > /dev/null && \
     sdkmanager "platform-tools" && \
     # sdkmanager "build-tools;35.0.0" && \
