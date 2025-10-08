@@ -4,7 +4,7 @@ import {styles} from "./style"
 // import './schedule'; 
 import { onDisplayNotification } from './notification';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from './preset_ui';
+import { RootStackParamList } from './App';
 import {useNavigation,} from '@react-navigation/native';
 import { SetSchedule } from './scheduler';
 
@@ -24,15 +24,11 @@ export type UIprop = {
 }
 
 export  function UI({
-    name, 
-    enthusiasmLevel,
-    setMenuOpen,
     tasks,
     weeklyData,
     toggleTask,
     completedTasks,
     totalTasks,
-    menuOpen
 }:UIprop)
 {  
   const navi = useNavigation<NavigationProps>();
@@ -154,7 +150,7 @@ export  function UI({
 
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate(navi.navigate("Home",{name:"User"}))} >
+          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate("Home",{name:"User"})} >
             <View style={styles.homeIcon}>
               <View style={styles.homeIconRoof} />
               <View style={styles.homeIconBase} />

@@ -21,8 +21,8 @@ export const SetSchedule=(num:number)=>{
     Triggerschedule(scheduled_time); 
     
 }
-async function Triggerschedule(schedule:Date){
-        
+export async function Triggerschedule(schedule:Date){
+  console.log(schedule+"\n\n");
   const settings = await notifee.requestPermission();
   if (settings.authorizationStatus < AuthorizationStatus.AUTHORIZED) {
     console.log('User denied notification permissions.');

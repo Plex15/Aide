@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+// import { Color } from 'react-native/types_generated/Libraries/Animated/AnimatedExports';
 
 export const styles = StyleSheet.create({
   container: {
@@ -318,5 +319,40 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
+  },
+
+
+  // Preset
+
+  itemContainer: {
+    flexDirection: 'row',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e1d6a2ff',
+    alignItems: 'center',
+    width:270
+  },
+   textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color:'rgba(202, 192, 0, 1)',
+  },
+  lastMessage: {
+    fontSize: 14,
+    padding:3,
+    paddingStart:10,
+    color: 'rgba(224, 219, 219, 1)',
+  },
+  infoContainer: {
+    alignItems: 'flex-end',
+  },
+  timestamp: {
+    fontSize: 12,
+    color: 'rgba(224, 219, 219, 1)',
+    justifyContent:'center'
   },
 });
