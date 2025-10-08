@@ -2,10 +2,11 @@ import React from 'react';
 import {TouchableOpacity, Text, View,  ScrollView,} from 'react-native';
 import {styles} from "./style"
 // import './schedule'; 
-import { onDisplayNotification } from './schedule';
+import { onDisplayNotification } from './notification';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './preset_ui';
 import {useNavigation,} from '@react-navigation/native';
+import { SetSchedule } from './scheduler';
 
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
@@ -42,7 +43,7 @@ export  function UI({
         <Text style={styles.logo}>AIDE</Text>
         <TouchableOpacity 
           style={styles.menuButton}
-          onPress={() => setMenuOpen(!menuOpen)}
+          onPress={()=>SetSchedule(10)}
         >
           <View style={styles.menuBar} />
           <View style={styles.menuBar} />
@@ -153,7 +154,7 @@ export  function UI({
 
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate(navi.goBack())} >
+          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate(navi.navigate("Home",{name:"User"}))} >
             <View style={styles.homeIcon}>
               <View style={styles.homeIconRoof} />
               <View style={styles.homeIconBase} />

@@ -30,7 +30,7 @@ export function preset_screen() {
 
         {/* Bottom section with progression and tasks */}
         <View style={styles.bottomSection}>
-
+        
 
         </View>
 

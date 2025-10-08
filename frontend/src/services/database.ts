@@ -1,7 +1,7 @@
 // src/services/Database.ts
 
 import { openDatabase, SQLiteDatabase, ResultSet } from 'react-native-sqlite-storage';
-
+import '@react'
 // Step 1: Define the "shape" of your data with an interface.
 // This is your contract for what a Schedule object looks like in your app.
 export interface Schedule {
