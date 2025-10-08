@@ -72,6 +72,51 @@ export const createTable = (): void => {
   });
 };
 
+//function to insert
+
+export const addSchedule = (title: string, notification_time: string, is_active = true): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    db.transaction(txn => {
+      txn.executeSql(
+        `INSERT INTO schedules (title, notification_time, is_active) VALUES (?, ?, ?);`,
+        [title, notification_time, is_active ? 1 : 0],
+        (_, result) => resolve(result.insertId as number),
+        (_, error) => { reject(error); return false; }
+      );
+    });
+  });
+};
+
+//Updation :)
+
+export const updateScheduleStatus = (id: number, is_active: boolean): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    db.transaction(txn => {
+      txn.executeSql(
+        `UPDATE schedules SET is_active = ? WHERE id = ?;`,
+        [is_active ? 1 : 0, id],
+        () => resolve(),
+        (_, error) => { reject(error); return false; }
+      );
+    });
+  });
+};
+
+// Deletion
+
+export const deleteSchedule = (id: number): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    db.transaction(txn => {
+      txn.executeSql(
+        `DELETE FROM schedules WHERE id = ?;`,
+        [id],
+        () => resolve(),
+        (_, error) => { reject(error); return false; }
+      );
+    });
+  });
+};
+
 // --- Example of a typed data-fetching function ---
 
 // This function now guarantees it will return a Promise that resolves
