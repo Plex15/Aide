@@ -1,12 +1,11 @@
 import React from 'react';
 import {TouchableOpacity, Text, View,  ScrollView,} from 'react-native';
 import {styles} from "./style"
-// import './schedule'; 
 import { onDisplayNotification } from './notification';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './App';
 import {useNavigation,} from '@react-navigation/native';
-import { SetSchedule } from './scheduler';
+
 
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
@@ -34,18 +33,6 @@ export  function UI({
   const navi = useNavigation<NavigationProps>();
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>AIDE</Text>
-        <TouchableOpacity 
-          style={styles.menuButton}
-          onPress={()=>SetSchedule(10)}
-        >
-          <View style={styles.menuBar} />
-          <View style={styles.menuBar} />
-          <View style={styles.menuBar} />
-        </TouchableOpacity>
-      </View>
 
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Overall Activity Graph */}

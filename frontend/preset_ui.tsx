@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { TouchableOpacity,View, Text, ScrollView,FlatList, Alert} from 'react-native';
+import { TouchableOpacity,View, Text, ScrollView,FlatList, Alert, StyleSheet} from 'react-native';
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { styles } from './style';
 import {  useNavigation,} from '@react-navigation/native';

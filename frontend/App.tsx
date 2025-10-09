@@ -1,11 +1,12 @@
 // Keep App.tsx minimal as possible
 // most properties/functions should be in /src folder
-import React,{useState,useEffect} from 'react';
+import React,{useEffect} from 'react';
 import { UI_init } from './core_ui';
 import { preset_screen } from './preset_ui';
 import { database_init } from './src/services/core_database';
 import { createStaticNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator,NativeStackHeaderProps } from '@react-navigation/native-stack';
+import { CustomHeader} from './nav-header-ui';
 //import { RootStackParamList } from './preset_ui';
 
 const HomeScreenParams = {
@@ -26,12 +27,26 @@ function Main(){
   screens: {
     Home:{
       screen: UI_init,
-      initialParams:HomeScreenParams
+      initialParams:HomeScreenParams,
+      options:{
+        title:"Aide"
+      },
     },
     Preset:{
       screen:preset_screen,
+            options:{
+        title:"Preset"
+      },
     }
   },
+  screenOptions: {
+      header: ({ route, options  }: NativeStackHeaderProps) => {
+      const title = options.title ?? route.name;
+        return <CustomHeader title={title} />;
+      },
+
+
+    },
   });
 
   const Navigation = createStaticNavigation(RootStack);
