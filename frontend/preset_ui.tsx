@@ -20,7 +20,9 @@ export function preset_screen() {
   
   const myPresets: preset_list[] = [
     { name: "Morning Workout", desc: "A quick 15-minute routine.", time: new Date(Date.now())},
-    { name: "Evening Stretch", desc: "Relax and unwind.", time: new Date(Date.now())},
+    { name: "Study", desc: "1st 2 modules", time: new Date(Date.now())},
+    { name: "Take Meds", desc: "50 paracetamol", time: new Date(Date.now())},
+    { name: "Meditate", desc: "Relax and unwind", time: new Date(Date.now())},
 ];
  const list = PresetContainers 
  //({items}:{items:preset_list})=>(

@@ -7,6 +7,8 @@ import { database_init } from './src/services/core_database';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator,NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { CustomHeader} from './nav-header-ui';
+import { Preset_edit_screen } from './preset_modifier';
+
 //import { RootStackParamList } from './preset_ui';
 
 const HomeScreenParams = {
@@ -15,6 +17,7 @@ const HomeScreenParams = {
 export type RootStackParamList = {
   Home: { name: string };
   Preset: undefined; // The Preset screen takes no parameters
+  Presetsetting: undefined;
 };
 
 function Main(){
@@ -37,7 +40,13 @@ function Main(){
             options:{
         title:"Preset"
       },
-    }
+    },
+    Presetsetting:{
+      screen:Preset_edit_screen,
+        options:{
+          title:"Preset"
+        }
+    },
   },
   screenOptions: {
       header: ({ route, options  }: NativeStackHeaderProps) => {
