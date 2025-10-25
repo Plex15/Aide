@@ -35,7 +35,7 @@ export const PresetContainers =({name,desc,time}:preset_list)=>{
             onCancel={() => {
               setOpen(false); // Close the modal
             }}
-            />
+          />
     </View>
     </TouchableOpacity>
   )

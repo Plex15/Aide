@@ -1,156 +1,157 @@
-// This is a UI instance component for User to interact with Scheduled interface
-// Later will be configured to change according to Preset data !! 
+// Preset Continers for Cards 
+// which used for Preset Customization of a task
 
-import React ,{ReactElement, useState} from 'react';
-import { View,ScrollView, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { QuickAddMenu } from './Preset_card_list';
-import { 
+import React, {useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { QuickAddMenu } from './Preset_card_selector';
+import {
+  Cards,
   NameCard,
-  WeeksCard, 
-} from './preset_components'; 
+  WeeksCard,
+  DaysCard,
+  TimeCard,
+} from './preset_components';
+
 
 
 export const Preset_edit_screen = () => {
-  const [focused,OnFocusCards]= useState(["options"])
-  const itemdata =["WeekCard","NameCard","NameCard"]
+
+  const [focused, OnFocusCards] = useState(["options"])
+  const itemdata = [Cards.Days, Cards.Time, "NameCard"]
   const [isMenuVisible, setMenuVisible] = useState(false);
-  
-  const AddList = (card:String) =>{
-    itemdata.push(String(card))
-    console.log(itemdata,"on addlist")
+
+  enum CardContiner {
+    Options = "option",
+    Schedule = "schedule",
+    Constrain = "constrain",
+    style = "style"
   }
 
-  const RemoveList = (card:string) =>{
+  const AddList = (card: String) => {
+    itemdata.push(String(card))
+    console.log(itemdata, "on addlist")
+  }
+
+  const RemoveList = (card: string) => {
     itemdata.pop()
-    console.log(itemdata,"on addlist")
   }
   
-  const ChangeFocus = (state:string) =>{
-    if (state== focused.toString()){
+  const ChangeFocus = (state: string) => {
+    if (state == focused.toString()) {
       OnFocusCards(["null"])
     }
-    else{
+    else {
       OnFocusCards([state])
     }
   }
   
-
-  const GetCard = (item:string):React.ReactElement | null =>{
-    if ( item == "NameCard"){
-        return <NameCard/>
-    } 
-    if ( item == "WeekCard"){
-        return <WeeksCard/>
+  
+  const GetCard = (item: string): React.ReactElement | null => {
+    if (item == Cards.Name) {
+      return <NameCard />
+    }
+    if (item == Cards.Week) {
+      return <WeeksCard />
+    }
+    if (item == Cards.Days) {
+      return <DaysCard />
+    }
+    if (item == Cards.Time) {
+      return <TimeCard />
     }
     return null
   }
 
+  const Preset_card_section = (type: string, Card: string, title: string) => {
+    return (
+      <TouchableOpacity
+        style={styles.PresetContainer}
+        activeOpacity={.95}
+        onPress={() => ChangeFocus(type)}>
+        <View style={styles.row_container}>
+          <Text style={[styles.title]}>{title}</Text>
+          <TouchableOpacity
+            style={styles.menuBar}
+            onPress={() => setMenuVisible(true)} 
+          />
+        </View>
+
+        {focused.toString() == type && (<FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{paddingBottom:20}}
+          data={itemdata}
+          renderItem={({ item }) =>
+            GetCard(item)
+          }
+          keyExtractor={(item, index) => index.toString()}
+        />
+        )}
+      </TouchableOpacity>
+    )
+  }
+
+  // UI of List and containers of cards in preset setting page
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-      style={styles.PresetContainer} 
-      activeOpacity={.7} 
-      onPress={()=>ChangeFocus("options")}>
-        
+      {/* <TouchableOpacity
+        style={styles.PresetContainer}
+        activeOpacity={.7}
+        onPress={() => ChangeFocus("options")}>
+
         <Text style={styles.title}>Options</Text>
-        <TouchableOpacity 
-        style={styles.menuBar} 
-        onPress={()=>setMenuVisible(true)}/>
+        <TouchableOpacity
+          style={styles.menuBar}
+          onPress={() => setMenuVisible(true)} />
 
-          {focused.toString()=="options" && (<FlatList
-            showsVerticalScrollIndicator={false}
-            data={itemdata}
-            renderItem={({item})=>
-                
-              GetCard(item)
-            }
-            keyExtractor={(item, index) => index.toString()} 
-          />
-          )}
-      </TouchableOpacity>
+        {focused.toString() == "options" && (<FlatList
+          showsVerticalScrollIndicator={false}
+          data={itemdata}
+          renderItem={({ item }) =>
 
-      <TouchableOpacity 
-      style={styles.PresetContainer} 
-      activeOpacity={.7} 
-      onPress={()=>ChangeFocus("schedule")}>
-        
-        <Text style={[styles.title]}>Schedule</Text>
-        <TouchableOpacity 
-        style={styles.menuBar} 
-        onPress={()=>AddList('NameCard')}/>
+            GetCard(item)
+          }
+          keyExtractor={(item, index) => index.toString()}
+        />
+        )}
+      </TouchableOpacity> */}
 
-          {focused.toString()=="schedule" && (<FlatList
-            showsVerticalScrollIndicator={false}
-            data={itemdata}
-            renderItem={({item})=>
-              <ScrollView >
-                {GetCard(item)}
-              </ScrollView>
-            }
-            keyExtractor={(item, index) => index.toString()} 
-          />
-          )}
-          {/* </View> */}
-      </TouchableOpacity>
+      {
+      Preset_card_section(
+        CardContiner.Options,
+        Cards.Name,
+        "Option"
+      )
+      }
 
-            <TouchableOpacity 
-      style={styles.PresetContainer} 
-      activeOpacity={.7} 
-      onPress={()=>ChangeFocus("constrain")}>
-        
-        <Text style={[styles.title]}>Constrains</Text>
-        <TouchableOpacity 
-        style={styles.menuBar} 
-        onPress={()=>AddList('WeekCard')}/>
+      {Preset_card_section(
+        CardContiner.Schedule,
+        Cards.Name,
+        "Trigger"
+      )
+      }
+      {Preset_card_section(
+        CardContiner.Constrain,
+        Cards.Week,
+        "Constrain"
+      )
+      }
+      {Preset_card_section(
+        CardContiner.style,
+        Cards.Name,
+        "Screen"
+      )
+      }
 
-          {focused.toString()=="constrain" && (<FlatList
-            showsVerticalScrollIndicator={false}
-            data={itemdata}
-            renderItem={({item})=>
-              <ScrollView >
-                {GetCard(item)}
-              </ScrollView>
-            }
-            keyExtractor={(item, index) => index.toString()} 
-          />
-          )}
-          {/* </View> */}
-      </TouchableOpacity>
-
-
-      <TouchableOpacity 
-      style={styles.PresetContainer} 
-      activeOpacity={.7} 
-      onPress={()=>ChangeFocus("style")}>
-        
-        <Text style={[styles.title]}>Screen</Text>
-        <TouchableOpacity 
-        style={styles.menuBar} 
-        onPress={()=>AddList('NameCard')}/>
-
-          {focused.toString()=="style" && (<FlatList
-            showsVerticalScrollIndicator={false}
-            data={itemdata}
-            renderItem={({item})=>
-              <ScrollView >
-                {GetCard(item)}
-              </ScrollView>
-            }
-            keyExtractor={(item, index) => index.toString()} 
-          />
-          )}
-          {/* </View> */}
-      </TouchableOpacity>
 
       {isMenuVisible && (<QuickAddMenu
-          // Pass the AddList function so the menu can call it
-          onAddItem={AddList}
-          // Pass a function to allow the menu to close itself
-          onClose={() => setMenuVisible(false)}
-          />)
-        }
-      </View>
-    
+        // Pass the AddList function so the menu can call it
+        onAddItem={AddList}
+        // Pass a function to allow the menu to close itself
+        onClose={() => setMenuVisible(false)}
+      />)
+      }
+    </View>
+
   );
 };
 
@@ -159,39 +160,40 @@ export const Preset_edit_screen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#747e49ff',
     alignItems: 'center',
-    
+
     // justifyContent: 'center',
   },
-  PresetContainer:{
-    // paddingTop:10,
-    marginTop:10,
-    paddingHorizontal:20,
-    // paddingVertical:'0%',
-    // justifyContent:"flex-start",
-    backgroundColor:"#171714aa",
-    maxHeight:'50%',
-    minWidth:'95%',
-    borderRadius:10,
-    minHeight:60
+  PresetContainer: {
+    marginTop: 5,
+    paddingHorizontal: 10,
+    backgroundColor: "#171714aa",
+    maxHeight: '55%',
+    minWidth: '98%',
+    borderRadius: 10,
+    minHeight: 60,
+    justifyContent:'center',
+    // alignItems:'center'
   },
-  row_container:{
-    // flexDirection:"row",
-    // alignContent:'center',
-    backgroundColor:"#20231aff",
-    // marginTop:5,
-    borderRadius:10,
-    paddingLeft:10
+  row_container: {
+    flexDirection:"row",
+    maxWidth:"98%",
+    marginVertical:10,
+    justifyContent:'space-between',
+    alignItems:'center'
   },
   title: {
     // flexDirection:"row",
-    color:'#e9e39cff',
+    color: '#e9e39cff',
     fontSize: 20,
+    minHeight:40,
+    // justifyContent:'center'
+    // flex:1
     // marginRight:'65%',
-    marginTop:15,
-    marginBottom:4,
+    // marginTop: 15,
+    // marginBottom: 4,
   },
   input: {
     backgroundColor: '#1d1d1aff',
@@ -201,18 +203,18 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     padding: 10,
-    justifyContent:'center',
-    marginLeft:30,
-    marginTop:7,
+    justifyContent: 'center',
+    marginLeft: 30,
+    marginTop: 7,
     // flex:1,
   },
-    menuBar: {
+  menuBar: {
     width: 25,
     height: 20,
     backgroundColor: '#D4AF37',
-    marginLeft:210,
-    paddingBottom:1,
-    // justifyContent:"center"
+    margin: 3,
+    // paddingBottom: 1,
+    alignContent:'flex-end'
 
   },
 });

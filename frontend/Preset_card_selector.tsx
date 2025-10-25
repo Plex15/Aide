@@ -1,11 +1,11 @@
+// A Small Selection menu to add Cards for container
+
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
-// import { AddList } from './preset_modifier';
-// A list of items that can be added
+
 const MENU_ITEMS = [
   { type: 'NameCard', label: 'Add Name' },
   { type: 'WeekCard', label: 'Add Week' },
-  // Add more predefined card types here
 ];
 
 type QuickAddMenuProps = {
