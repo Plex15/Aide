@@ -10,14 +10,18 @@ import {
   WeeksCard,
   DaysCard,
   TimeCard,
+  MonthsCard,
 } from './preset_components';
 
 
+// Note: currently it used with navigation 
+// to pass task_id for task specific data retrive i called from:
+// preset_ui -> Preset_container => Preset_edit_screen (current) pass task_id parameter from preset_ui
 
 export const Preset_edit_screen = () => {
 
   const [focused, OnFocusCards] = useState(["options"])
-  const itemdata = [Cards.Days, Cards.Time, "NameCard"]
+  const itemdata:string[] = [Cards.Month, Cards.Time, Cards.Days,Cards.Week,Cards.Name]
   const [isMenuVisible, setMenuVisible] = useState(false);
 
   enum CardContiner {
@@ -59,6 +63,9 @@ export const Preset_edit_screen = () => {
     if (item == Cards.Time) {
       return <TimeCard />
     }
+    if (item == Cards.Month) {
+      return <MonthsCard />
+    }
     return null
   }
 
@@ -93,28 +100,6 @@ export const Preset_edit_screen = () => {
   // UI of List and containers of cards in preset setting page
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity
-        style={styles.PresetContainer}
-        activeOpacity={.7}
-        onPress={() => ChangeFocus("options")}>
-
-        <Text style={styles.title}>Options</Text>
-        <TouchableOpacity
-          style={styles.menuBar}
-          onPress={() => setMenuVisible(true)} />
-
-        {focused.toString() == "options" && (<FlatList
-          showsVerticalScrollIndicator={false}
-          data={itemdata}
-          renderItem={({ item }) =>
-
-            GetCard(item)
-          }
-          keyExtractor={(item, index) => index.toString()}
-        />
-        )}
-      </TouchableOpacity> */}
-
       {
       Preset_card_section(
         CardContiner.Options,
@@ -164,7 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#747e49ff',
     alignItems: 'center',
 
-    // justifyContent: 'center',
+    // justifyContent: 'space-around',
   },
   PresetContainer: {
     marginTop: 5,
@@ -174,7 +159,7 @@ const styles = StyleSheet.create({
     minWidth: '98%',
     borderRadius: 10,
     minHeight: 60,
-    justifyContent:'center',
+    // justifyContent:'space-between',
     // alignItems:'center'
   },
   row_container: {
@@ -185,35 +170,28 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   title: {
-    // flexDirection:"row",
     color: '#e9e39cff',
     fontSize: 20,
     minHeight:40,
-    // justifyContent:'center'
-    // flex:1
-    // marginRight:'65%',
-    // marginTop: 15,
-    // marginBottom: 4,
   },
-  input: {
-    backgroundColor: '#1d1d1aff',
-    color: '#ffffffff',
-    height: 10,
-    width: '40%',
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 10,
-    justifyContent: 'center',
-    marginLeft: 30,
-    marginTop: 7,
-    // flex:1,
-  },
+  // input: {
+  //   backgroundColor: '#1d1d1aff',
+  //   color: '#ffffffff',
+  //   height: 10,
+  //   width: '40%',
+  //   borderColor: 'black',
+  //   borderWidth: 1,
+  //   padding: 10,
+  //   justifyContent: 'center',
+  //   marginLeft: 30,
+  //   marginTop: 7,
+  // },
   menuBar: {
     width: 25,
     height: 20,
     backgroundColor: '#D4AF37',
     margin: 3,
-    // paddingBottom: 1,
+    borderRadius:10,
     alignContent:'flex-end'
 
   },

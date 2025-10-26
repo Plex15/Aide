@@ -1,8 +1,11 @@
 import React,{useState} from 'react';
 import { StyleSheet } from "react-native";
 import { TouchableOpacity,View, Text,} from 'react-native';
-import DatePicker from 'react-native-date-picker';
-import { Triggerschedule } from './scheduler';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from './App';
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 export type preset_list={
   name:string,
@@ -10,33 +13,21 @@ export type preset_list={
   time:Date
 }
 
+
 export const PresetContainers =({name,desc,time}:preset_list)=>{
-  const [open, setOpen] = useState(false);
-  const [value, onChange] = useState(new Date());
+  const nav = useNavigation<NavigationProps>()
   return(
-    <TouchableOpacity style={preset_style.itemContainer} onPress={()=>Triggerschedule(value)}>
+    <TouchableOpacity style={preset_style.itemContainer} onPress={()=>nav.navigate('Presetsetting')}>
     <View style={preset_style.textContainer}>
         <Text style={preset_style.name}>{name}</Text>
         <Text style={preset_style.lastMessage}>{desc}</Text>
     </View>
     <View style={preset_style.infoContainer}>
         <Text style={preset_style.timestamp}>{time.getHours()}:{time.getMinutes()}</Text>
-        <TouchableOpacity style={preset_style.EditButton} onPress={()=>setOpen(true)}>
+        <TouchableOpacity style={preset_style.EditButton} > 
           <Text style={preset_style.name}>EDIT</Text>
         </TouchableOpacity>
-          <DatePicker
-            modal
-            open={open}
-            date={value} // Pass the Date object here
-            onConfirm={(selectedDate) => {
-              setOpen(false); // Close the modal
-              onChange(selectedDate); // Update your state with the new date
-            }}
-            onCancel={() => {
-              setOpen(false); // Close the modal
-            }}
-          />
-    </View>
+    </View> 
     </TouchableOpacity>
   )
 }

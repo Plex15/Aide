@@ -7,14 +7,8 @@ import {  useNavigation,} from '@react-navigation/native';
 import { RootStackParamList } from './App';
 import {preset_list, PresetContainers  } from './Preset_container';
 
-// export type RootStackParamList = {
-//   Home: { name: string };
-//   Preset: undefined; // The Preset screen takes no parameters
-// };
-
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
-// type UIProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export function preset_screen() {
   
@@ -24,24 +18,16 @@ export function preset_screen() {
     { name: "Take Meds", desc: "50 paracetamol", time: new Date(Date.now())},
     { name: "Meditate", desc: "Relax and unwind", time: new Date(Date.now())},
 ];
- const list = PresetContainers 
- //({items}:{items:preset_list})=>(
-  //   <preset_containers/>
-  // );
+//  const list = PresetContainers 
 
   const navi = useNavigation<NavigationProps>();
   return (
     <View style={styles.container}>
-      {/* Header */}
-{/* 
-      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}> */}
 
-        {/* Bottom section with progression and tasks */}
         <View style={styles.bottomSection}>
           <FlatList
             data={myPresets}
             renderItem={({ item }) => (
-              // Use the capitalized component name here
             <PresetContainers 
                 name={item.name}
                 desc={item.desc}
@@ -54,8 +40,6 @@ export function preset_screen() {
         </View>
 
 
-
-        {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
           <TouchableOpacity style={styles.navButton} onPress={() =>navi.goBack()} >
             <View style={styles.homeIcon}>
@@ -71,7 +55,6 @@ export function preset_screen() {
             </View>
           </TouchableOpacity>
         </View>
-      {/* </ScrollView> */}
     </View>
   )
 }

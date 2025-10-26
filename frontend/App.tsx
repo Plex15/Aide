@@ -7,7 +7,7 @@ import { database_init } from './src/services/core_database';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator,NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { CustomHeader} from './nav-header-ui';
-import { Preset_edit_screen } from './preset_modifier';
+import { Preset_edit_screen } from './preset_edit_screen';
 
 //import { RootStackParamList } from './preset_ui';
 
