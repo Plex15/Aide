@@ -355,4 +355,8 @@ export const styles = StyleSheet.create({
     color: 'rgba(224, 219, 219, 1)',
     justifyContent:'center'
   },
+  listContiner:{
+    flex:1,
+    justifyContent:'center',
+  }
 });

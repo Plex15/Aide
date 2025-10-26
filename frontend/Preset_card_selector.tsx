@@ -2,28 +2,36 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import { Cards, CardContiner } from './preset_edit_screen';
 
+//temp data for database
 const MENU_ITEMS = [
-  { type: 'NameCard', label: 'Add Name' },
-  { type: 'WeekCard', label: 'Add Week' },
+  { type: Cards.Name,  group:CardContiner.Options,  label: 'Name' },
+  { type: Cards.Time,  group:CardContiner.Schedule, label: 'Time' },
+  { type: Cards.Days,  group:CardContiner.Schedule, label: 'Days' },
+  { type: Cards.Week,  group:CardContiner.Schedule, label: 'Week' },
+  { type: Cards.Month, group:CardContiner.Schedule, label: 'Months' },
 ];
 
 type QuickAddMenuProps = {
   onAddItem: (cardType: string) => void; // A function that takes a string and returns nothing
   onClose: () => void;                   // A function that takes nothing and returns nothing
+  ContinerGroup: string
 };
 
-export const QuickAddMenu = ({ onAddItem, onClose }:QuickAddMenuProps) => {
+export const QuickAddMenu = ({ onAddItem, onClose, ContinerGroup }:QuickAddMenuProps) => {
+  // console.log(Card)
   return (
     // Use a Pressable to cover the screen and close the menu when tapping outside
     <Pressable style={styles.overlay} onPress={onClose}>
       <View style={styles.menuContainer}>
-        {MENU_ITEMS.map(item => (
+        {MENU_ITEMS
+        .filter(item=> item.group == ContinerGroup)
+        .map(item => (
           <TouchableOpacity
-            key={item.type}
-            style={styles.menuItem}
-            // --- FIX #7: When an item is pressed, call the function from the parent ---
-            onPress={() => onAddItem(item.type)}
+          key={item.type}
+          style={styles.menuItem}
+          onPress={() => onAddItem(item.type)}
           >
             <Text style={styles.menuText}>{item.label}</Text>
           </TouchableOpacity>

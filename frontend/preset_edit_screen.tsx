@@ -5,39 +5,47 @@ import React, {useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { QuickAddMenu } from './Preset_card_selector';
 import {
-  Cards,
   NameCard,
   WeeksCard,
   DaysCard,
   TimeCard,
   MonthsCard,
-} from './preset_components';
+} from './preset_cards_compo';
 
+export enum Cards {
+  Name="NameCard",
+  Week="WeekCard",
+  Days="DayCard",
+  Time="TimeCard",
+  Month="MonthCard",
+}
 
+export enum CardContiner {
+  Options = "option",
+  Schedule = "schedule",
+  Constrain = "constrain",
+  style = "style"
+}
 // Note: currently it used with navigation 
 // to pass task_id for task specific data retrive i called from:
 // preset_ui -> Preset_container => Preset_edit_screen (current) pass task_id parameter from preset_ui
 
 export const Preset_edit_screen = () => {
 
+  const [itemdata,UpdateList] = useState<string[]>([Cards.Month, Cards.Time, Cards.Days,Cards.Week,Cards.Name])
   const [focused, OnFocusCards] = useState(["options"])
-  const itemdata:string[] = [Cards.Month, Cards.Time, Cards.Days,Cards.Week,Cards.Name]
   const [isMenuVisible, setMenuVisible] = useState(false);
+  const [CardGroup,setGroup] = useState(String);
 
-  enum CardContiner {
-    Options = "option",
-    Schedule = "schedule",
-    Constrain = "constrain",
-    style = "style"
-  }
-
-  const AddList = (card: String) => {
-    itemdata.push(String(card))
+  const AddList = (card: string) => {
+    // itemdata.push(String(card))
+    UpdateList([...itemdata,card])
     console.log(itemdata, "on addlist")
   }
-
+  
   const RemoveList = (card: string) => {
-    itemdata.pop()
+    UpdateList(itemdata.filter(item=>item!==card))    // bug same mutile card of same type delete together
+    console.log(itemdata, "on removelist")
   }
   
   const ChangeFocus = (state: string) => {
@@ -52,41 +60,42 @@ export const Preset_edit_screen = () => {
   
   const GetCard = (item: string): React.ReactElement | null => {
     if (item == Cards.Name) {
-      return <NameCard />
+      return <NameCard Remover={(card)=>RemoveList(card)}/>
     }
     if (item == Cards.Week) {
-      return <WeeksCard />
+      return <WeeksCard Remover={(card)=>RemoveList(card)}/>
     }
     if (item == Cards.Days) {
-      return <DaysCard />
+      return <DaysCard Remover={(card)=>RemoveList(card)}/>
     }
     if (item == Cards.Time) {
-      return <TimeCard />
+      return <TimeCard Remover={(card)=>RemoveList(card)}/>
     }
     if (item == Cards.Month) {
-      return <MonthsCard />
+      return <MonthsCard Remover={(card)=>RemoveList(card)}/>
     }
     return null
   }
 
-  const Preset_card_section = (type: string, Card: string, title: string) => {
+  const Preset_card_section = (type: string, title: string) => {
     return (
       <TouchableOpacity
         style={styles.PresetContainer}
         activeOpacity={.95}
         onPress={() => ChangeFocus(type)}>
-        <View style={styles.row_container}>
+
+        <View style={styles.row_container}>               
           <Text style={[styles.title]}>{title}</Text>
           <TouchableOpacity
             style={styles.menuBar}
-            onPress={() => setMenuVisible(true)} 
+            onPress={() => [setMenuVisible(true),setGroup(type)]} 
           />
         </View>
 
         {focused.toString() == type && (<FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom:20}}
-          data={itemdata}
+          data={itemdata}                           // filter this to make individual items on each groups
           renderItem={({ item }) =>
             GetCard(item)
           }
@@ -103,36 +112,31 @@ export const Preset_edit_screen = () => {
       {
       Preset_card_section(
         CardContiner.Options,
-        Cards.Name,
         "Option"
       )
       }
 
       {Preset_card_section(
         CardContiner.Schedule,
-        Cards.Name,
         "Trigger"
       )
       }
       {Preset_card_section(
         CardContiner.Constrain,
-        Cards.Week,
         "Constrain"
       )
       }
       {Preset_card_section(
         CardContiner.style,
-        Cards.Name,
         "Screen"
       )
       }
 
 
       {isMenuVisible && (<QuickAddMenu
-        // Pass the AddList function so the menu can call it
         onAddItem={AddList}
-        // Pass a function to allow the menu to close itself
         onClose={() => setMenuVisible(false)}
+        ContinerGroup={CardGroup}
       />)
       }
     </View>
@@ -146,7 +150,7 @@ export const Preset_edit_screen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#747e49ff',
+    backgroundColor:  '#2B2B2B',
     alignItems: 'center',
 
     // justifyContent: 'space-around',

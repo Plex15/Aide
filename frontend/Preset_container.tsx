@@ -17,7 +17,7 @@ export type preset_list={
 export const PresetContainers =({name,desc,time}:preset_list)=>{
   const nav = useNavigation<NavigationProps>()
   return(
-    <TouchableOpacity style={preset_style.itemContainer} onPress={()=>nav.navigate('Presetsetting')}>
+    <TouchableOpacity activeOpacity={.7} style={preset_style.itemContainer} onPress={()=>nav.navigate('Presetsetting')}>
     <View style={preset_style.textContainer}>
         <Text style={preset_style.name}>{name}</Text>
         <Text style={preset_style.lastMessage}>{desc}</Text>
@@ -33,13 +33,16 @@ export const PresetContainers =({name,desc,time}:preset_list)=>{
 }
 
 export const preset_style = StyleSheet.create({
-    itemContainer: {
+  itemContainer: {
     flexDirection: 'row',
     padding: 10,
+    marginVertical:4,
+    marginHorizontal:10,
     borderBottomWidth: 1,
+    backgroundColor:'#3c3931ff',
     borderBottomColor: '#e1d6a2ff',
     alignItems: 'center',
-    width:270
+    borderRadius:7,
   },
    textContainer: {
     flex: 1,
@@ -48,7 +51,7 @@ export const preset_style = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: 'bold',
-    color:'rgba(202, 192, 0, 1)',
+    color:'hsla(57, 100%, 40%, 1.00)',
   },
   lastMessage: {
     fontSize: 14,

@@ -1,15 +1,11 @@
 import React,{useState} from 'react';
 import { View, Text, StyleSheet, TextInput, Touchable, TouchableOpacity, Animated } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import { Cards } from './preset_edit_screen';
 
-export enum Cards {
-  Name="NameCard",
-  Week="WeekCard",
-  Days="DayCard",
-  Time="TimeCard",
-  Month="MonthCard",
-}
 
+
+// for now it here as a default selection until database
 const card_data={
   Week  : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
   Month : ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] 
@@ -17,7 +13,11 @@ const card_data={
 }
 
 
-export const NameCard= () => {
+type CardProp={
+  Remover : (card:string) => void
+}
+
+export const NameCard= ({Remover}:CardProp) => {
   return (
     <TouchableOpacity activeOpacity={1} style={[general_style.container,general_style.row_container]}>
       <View style={general_style.Section}>
@@ -31,7 +31,7 @@ export const NameCard= () => {
         />
       </View>
       <View style={general_style.Section}>
-        <TouchableOpacity style={general_style.Buttons}>
+        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Name)} >
           <Text style={general_style.ButtonsTexts}>X</Text>
         </TouchableOpacity>
       </View>
@@ -39,16 +39,7 @@ export const NameCard= () => {
   );
 };
 
-export const WeeksCard= () => {
-  const [selected,Select] = useState<string[]>(card_data.Week)
-  const ToggleSelection=(selection:string)=>{
-    if (selected.includes(selection)){
-      Select(selected.filter(item=>item !==selection))
-    }
-    else{
-      Select([...selected,selection])
-    }
-  }
+export const WeeksCard= ({Remover}:CardProp) => {
   return (
    <TouchableOpacity activeOpacity={1} style={[general_style.container,general_style.row_container]}>
       <View style={general_style.Section}>
@@ -59,21 +50,21 @@ export const WeeksCard= () => {
           style={general_style.TextBox}
           placeholder="1"
           placeholderTextColor="#a9a9a9d3"
+          textAlign='center'
         />
       </View>
       <View style={general_style.Section}>
-        <TouchableOpacity style={general_style.Buttons}>
+        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Week)}>
           <Text style={general_style.ButtonsTexts}>X</Text>
         </TouchableOpacity>
       </View>
-
+      
     </TouchableOpacity>
   );
 };
 
-export const DaysCard = () => {
+export const DaysCard = ({Remover}:CardProp) => {
   const [selected,Select] = useState<string[]>(card_data.Week)
-  console.log(selected)
   const ToggleSelection=(selection:string)=>{
     if (selected.includes(selection)){
       Select(selected.filter(item=>item !==selection))
@@ -103,7 +94,7 @@ export const DaysCard = () => {
           <Text style={general_style.title}>Days</Text>
         </View>
           <View style={general_style.Section}>
-          <TouchableOpacity style={general_style.Buttons}>
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Days)} >
             <Text style={general_style.ButtonsTexts}>X</Text>
           </TouchableOpacity>
         </View>
@@ -121,7 +112,7 @@ export const DaysCard = () => {
   );
 };
 
-export const TimeCard = () =>{
+export const TimeCard = ({Remover}:CardProp) =>{
   const [open, setOpen] = useState(false);
   const [value, onChange] = useState(new Date());
   return(
@@ -148,7 +139,7 @@ export const TimeCard = () =>{
             />
       </TouchableOpacity>
         <View style={general_style.Section}>
-          <TouchableOpacity style={general_style.Buttons}>
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Time)} >
             <Text style={general_style.ButtonsTexts}>X</Text>
           </TouchableOpacity>
         </View>
@@ -158,7 +149,7 @@ export const TimeCard = () =>{
   )
 }
 
-export const MonthsCard = () => {
+export const MonthsCard = ({Remover}:CardProp) => {
   const [selected,Select] = useState<string[]>(card_data.Month)
   const ToggleSelection=(selection:string)=>{
     if (selected.includes(selection)){
@@ -191,7 +182,7 @@ export const MonthsCard = () => {
         <Text style={general_style.title}>Months</Text>
         </View>
         <View style={general_style.Section}>
-          <TouchableOpacity style={general_style.Buttons}>
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Month)}>
             <Text style={general_style.ButtonsTexts}>X</Text>
           </TouchableOpacity>
         </View>
@@ -220,7 +211,7 @@ const general_style = StyleSheet.create({
   container: {
     marginTop:10,
     width: '98%',
-    backgroundColor:'#465736ff',
+    backgroundColor:'#59583cff',
     borderRadius:10,
   },
   Section:{
@@ -260,17 +251,19 @@ const general_style = StyleSheet.create({
     color:'#ffffffff',
   },
   TextBox: {
-    backgroundColor: '#76767208',
+    backgroundColor: '#0000000d',
     textAlign:"center",
     textShadowColor:"#171714aa",
     color: '#ffffffff',
     width: '100%',
     borderColor: 'black',
-    borderBottomWidth: 1,
-    minWidth:120,
+    borderBottomWidth: 2,
+    minWidth:130,
     marginLeft:10,
-    marginVertical:1,
-    borderRadius:3,
+    marginVertical:2,
+    borderRadius:5,
+    
+    
   }
 });
 
