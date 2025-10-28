@@ -6,15 +6,15 @@ import { Cards, CardContiner } from './preset_edit_screen';
 
 //temp data for database
 const MENU_ITEMS = [
-  { type: Cards.Name,  group:CardContiner.Options,  label: 'Name' },
-  { type: Cards.Time,  group:CardContiner.Schedule, label: 'Time' },
-  { type: Cards.Days,  group:CardContiner.Schedule, label: 'Days' },
-  { type: Cards.Week,  group:CardContiner.Schedule, label: 'Week' },
-  { type: Cards.Month, group:CardContiner.Schedule, label: 'Months' },
+  { Card: Cards.Name,  group:CardContiner.Options,  label: 'Name' },
+  { Card: Cards.Time,  group:CardContiner.Schedule, label: 'Time' },
+  { Card: Cards.Days,  group:CardContiner.Schedule, label: 'Days' },
+  { Card: Cards.Week,  group:CardContiner.Schedule, label: 'Week' },
+  { Card: Cards.Month, group:CardContiner.Schedule, label: 'Months' },
 ];
 
 type QuickAddMenuProps = {
-  onAddItem: (cardType: string) => void; // A function that takes a string and returns nothing
+  onAddItem: (cardType: string, group:string) => void; // A function that takes a string and returns nothing
   onClose: () => void;                   // A function that takes nothing and returns nothing
   ContinerGroup: string
 };
@@ -29,9 +29,9 @@ export const QuickAddMenu = ({ onAddItem, onClose, ContinerGroup }:QuickAddMenuP
         .filter(item=> item.group == ContinerGroup)
         .map(item => (
           <TouchableOpacity
-          key={item.type}
+          key={item.Card}
           style={styles.menuItem}
-          onPress={() => onAddItem(item.type)}
+          onPress={() => [onAddItem(item.Card,item.group),onClose]}
           >
             <Text style={styles.menuText}>{item.label}</Text>
           </TouchableOpacity>

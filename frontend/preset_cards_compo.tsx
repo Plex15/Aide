@@ -1,23 +1,31 @@
-import React,{useState} from 'react';
-import { View, Text, StyleSheet, TextInput, Touchable, TouchableOpacity, Animated } from 'react-native';
+import React,{useEffect, useState} from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import { Cards } from './preset_edit_screen';
-
-
-
-// for now it here as a default selection until database
-const card_data={
-  Week  : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
-  Month : ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] 
-  
-}
 
 
 type CardProp={
+  id : string,
+  data:string[]
+  TimePeriod?: boolean
   Remover : (card:string) => void
+  UpdateData : (data:string[],id:string) => void
+
 }
 
-export const NameCard= ({Remover}:CardProp) => {
+enum DateForm{
+  time,
+  day,
+}
+
+const FormatDate=(value:Date,output:DateForm) =>{
+  const hour_12h = value.getHours()%12!=0 ? value.getHours()%12 : 12
+  const Period = value.getHours() < 12 ? 'AM':'PM'
+  const min = value.getMinutes().toString().padStart(2,'0')
+  if(output == DateForm.time){return String(hour_12h+":"+min+" "+Period)}
+  return("ERROR 0:00")
+}
+
+export const NameCard= ({id,data,Remover,UpdateData}:CardProp) => {
   return (
     <TouchableOpacity activeOpacity={1} style={[general_style.container,general_style.row_container]}>
       <View style={general_style.Section}>
@@ -27,11 +35,13 @@ export const NameCard= ({Remover}:CardProp) => {
         <TextInput
           style={general_style.TextBox}
           placeholder="Time-pass"
-           placeholderTextColor="#a9a9a9d3"
-        />
+          placeholderTextColor="#a9a9a9d3"
+          value={data[0]}
+          onChangeText={(value)=>UpdateData([value],id)}
+          />
       </View>
       <View style={general_style.Section}>
-        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Name)} >
+        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)} >
           <Text style={general_style.ButtonsTexts}>X</Text>
         </TouchableOpacity>
       </View>
@@ -39,22 +49,25 @@ export const NameCard= ({Remover}:CardProp) => {
   );
 };
 
-export const WeeksCard= ({Remover}:CardProp) => {
+export const WeeksCard= ({id,data,Remover,UpdateData}:CardProp) => {
   return (
-   <TouchableOpacity activeOpacity={1} style={[general_style.container,general_style.row_container]}>
+    <TouchableOpacity activeOpacity={1} style={[general_style.container,general_style.row_container]}>
       <View style={general_style.Section}>
         <Text style={general_style.title}>Week</Text>
       </View>
       <View>
         <TextInput
           style={general_style.TextBox}
+          keyboardType='numeric'
           placeholder="1"
           placeholderTextColor="#a9a9a9d3"
           textAlign='center'
-        />
+          value={data[0]}
+          onChangeText={(value)=>UpdateData([value],id)}
+          />
       </View>
       <View style={general_style.Section}>
-        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Week)}>
+        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)}>
           <Text style={general_style.ButtonsTexts}>X</Text>
         </TouchableOpacity>
       </View>
@@ -63,15 +76,17 @@ export const WeeksCard= ({Remover}:CardProp) => {
   );
 };
 
-export const DaysCard = ({Remover}:CardProp) => {
-  const [selected,Select] = useState<string[]>(card_data.Week)
+export const DaysCard = ({id,data,Remover,UpdateData}:CardProp) => {
+  const [selected,Select] = useState<string[]>(data)
+  useEffect(()=>{UpdateData(selected,id)},[selected])
   const ToggleSelection=(selection:string)=>{
     if (selected.includes(selection)){
-      Select(selected.filter(item=>item !==selection))
+      Select(selected.filter(item=>item !== selection))
     }
     else{
       Select([...selected,selection])
     }
+    console.log(selected)
   }
   const DaysButtons= (day:string) =>{
     return(
@@ -94,7 +109,7 @@ export const DaysCard = ({Remover}:CardProp) => {
           <Text style={general_style.title}>Days</Text>
         </View>
           <View style={general_style.Section}>
-          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Days)} >
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)} >
             <Text style={general_style.ButtonsTexts}>X</Text>
           </TouchableOpacity>
         </View>
@@ -112,45 +127,85 @@ export const DaysCard = ({Remover}:CardProp) => {
   );
 };
 
-export const TimeCard = ({Remover}:CardProp) =>{
-  const [open, setOpen] = useState(false);
-  const [value, onChange] = useState(new Date());
+export const TimeCard = ({id,data,TimePeriod,Remover,UpdateData}:CardProp) =>{
+  const date = new Date(data[0]);
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [TimeForm, ToggleForm] = useState(false);
+  const [value_1, onChange1] = useState(date);
+  const [value_2, onChange2] = useState(date);
+  useEffect(()=>{UpdateData([value_1.toISOString(),value_2.toISOString()],id)},[value_1])
+  TimePeriod = TimeForm
+  
+
   return(
   <TouchableOpacity activeOpacity={1} style={[general_style.container]}>
-    <View style={[general_style.row_container,Time_sp_style.DatePicker]}>
+    <View style={[general_style.row_container]}>
+      <View style={general_style.row_container}>
         <View style={general_style.Section}>
           <Text style={general_style.title}>Time</Text>
         </View>
-        <View style={general_style.row_container}>
-          <TouchableOpacity style={[general_style.Buttons,Time_sp_style.Button]} onPress={()=>setOpen(true)}>
-          <Text style={general_style.ButtonsTexts}>Change</Text>
-          <DatePicker
-            modal
-            mode='time'
-            open={open}
-            date={value} // Pass the Date object here
-            onConfirm={(selectedDate) => {
-              setOpen(false); // Close the modal
-              onChange(selectedDate); // Update your state with the new date
-            }}
-            onCancel={() => {
-              setOpen(false); // Close the modal
-            }}
-            />
-      </TouchableOpacity>
-        <View style={general_style.Section}>
-          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Time)} >
+        <View style={Time_sp_style.Section}>
+          <TouchableOpacity onPress={()=>setOpen1(true)}>
+            <Text style={Time_sp_style.title}>{FormatDate(value_1,DateForm.time)}</Text>
+          </TouchableOpacity>
+        </View>
+        {TimePeriod&&<View style={[,Time_sp_style.Section]}>
+          <View style={general_style.row_container}>
+            <Text style={[general_style.title]}>  to  </Text>
+            <TouchableOpacity onPress={()=>setOpen2(true)}>
+              <Text style={Time_sp_style.title}>{FormatDate(value_2,DateForm.time)}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>}
+      </View>
+        <View style={[general_style.Section]}>
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)} >
             <Text style={general_style.ButtonsTexts}>X</Text>
           </TouchableOpacity>
         </View>
+    </View>
+    <View style={[general_style.RawRow,general_style.RawSection]}>
+      <TouchableOpacity style={[general_style.Buttons,Time_sp_style.Button]} onPress={()=>ToggleForm(value=>!value)} >
+        <Text style={TimePeriod?Time_sp_style.ButtonsTexts:[Time_sp_style.ButtonsTexts]}>
+          {TimePeriod?'Time Period':'Spcific Time'}
+        </Text>
+      </TouchableOpacity>
+
+      <View style={[general_style.row_container]}>
+          {/* <TouchableOpacity style={[general_style.Buttons]} onPress={()=>setOpen1(true)}>
+            <Text style={general_style.ButtonsTexts}>Change</Text>
+        </TouchableOpacity>
+
+        {TimePeriod && 
+          <TouchableOpacity style={[general_style.Buttons]} onPress={()=>setOpen2(true)}>
+            <Text style={general_style.ButtonsTexts}>Change</Text>
+        </TouchableOpacity>} */}
+
       </View>
     </View>
-  </TouchableOpacity>
+      <DatePicker modal mode='time' open={open1} date={value_1} 
+        onConfirm={(selectedDate) => {
+          setOpen1(false); 
+          onChange1(selectedDate);
+        }}
+        onCancel={() => {setOpen1(false)}}
+        />
+      <DatePicker modal mode='time' open={open2} date={value_2} 
+      onConfirm={(selectedDate) => {
+        setOpen2(false); 
+        onChange2(selectedDate);
+      }}
+      onCancel={() => {setOpen2(false); }}
+      />
+      
+    </TouchableOpacity>
   )
 }
 
-export const MonthsCard = ({Remover}:CardProp) => {
-  const [selected,Select] = useState<string[]>(card_data.Month)
+export const MonthsCard = ({id,data,Remover,UpdateData}:CardProp) => {
+  const [selected,Select] = useState<string[]>(data)
+  useEffect(()=>{UpdateData(selected,id)},[selected])
   const ToggleSelection=(selection:string)=>{
     if (selected.includes(selection)){
       Select(selected.filter(item=>item !==selection))
@@ -182,7 +237,7 @@ export const MonthsCard = ({Remover}:CardProp) => {
         <Text style={general_style.title}>Months</Text>
         </View>
         <View style={general_style.Section}>
-          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(Cards.Month)}>
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)}>
             <Text style={general_style.ButtonsTexts}>X</Text>
           </TouchableOpacity>
         </View>
@@ -211,6 +266,7 @@ const general_style = StyleSheet.create({
   container: {
     marginTop:10,
     width: '98%',
+    maxWidth:'98%',
     backgroundColor:'#59583cff',
     borderRadius:10,
   },
@@ -220,10 +276,18 @@ const general_style = StyleSheet.create({
     paddingTop:5,
     justifyContent:'space-evenly',
   },
+  RawSection:{
+    minHeight:45,
+    paddingHorizontal:10,
+    paddingTop:5,
+  },
   row_container:{
     flexDirection:"row",
     justifyContent:'space-between'
     
+  },
+  RawRow:{
+    flexDirection:"row",
   },
   title: {
     color:'#ffffffff',
@@ -268,21 +332,31 @@ const general_style = StyleSheet.create({
 });
 
 const days_sp_style=StyleSheet.create({
-  ButtonsTexts:{
-    fontSize:13,
-  },
 });
 const Time_sp_style=StyleSheet.create({
-  DatePicker:{
-    justifyContent:"space-between"
-    // marginVertical:50,
-    // paddingBottom:20,
-
+  Section:{
+    minHeight:45,
+    // paddingRight:'1%',
+    paddingTop:1,
+    justifyContent:'center',
+    
+  },
+  title: {
+    color:'#ebfefdff',
+    fontSize: 15,
+    fontFamily:"monospace",
+    paddingTop:3
+  },
+  ButtonsTexts:{
+    fontFamily:'monospace',
+    fontSize:13,
+    textAlign:'center',
+    color:'#ffffffff',
   },
   Button:{
-    marginRight:10,
-    marginTop:10,
-    // width:10,
-    alignItems:"center"
+    minWidth:150,
+    borderRadius:20,
+    borderWidth:5,
+    borderColor:'#7f7737ff'
   },
 });

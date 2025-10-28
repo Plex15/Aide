@@ -29,23 +29,45 @@ export enum CardContiner {
 // Note: currently it used with navigation 
 // to pass task_id for task specific data retrive i called from:
 // preset_ui -> Preset_container => Preset_edit_screen (current) pass task_id parameter from preset_ui
+type localCardData ={
+  id   : string,
+  card : string,
+  group: string,
+  data : string[], 
+}
+
 
 export const Preset_edit_screen = () => {
-
-  const [itemdata,UpdateList] = useState<string[]>([Cards.Month, Cards.Time, Cards.Days,Cards.Week,Cards.Name])
+  
+  const [itemdata,UpdateList] = useState<localCardData[]>(
+    [
+      {id:Math.random().toString(),card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
+      {id:Math.random().toString(),card:Cards.Time,group:CardContiner.Schedule,data:[new Date(Date.now()).toDateString()]} 
+    ])
   const [focused, OnFocusCards] = useState(["options"])
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [CardGroup,setGroup] = useState(String);
-
-  const AddList = (card: string) => {
-    // itemdata.push(String(card))
-    UpdateList([...itemdata,card])
-    console.log(itemdata, "on addlist")
+  
+  const UpdateData =(CardData:string[],CardId:string)=>{
+    UpdateList(NewData=>NewData.map(
+      item => {if (item.id === CardId){
+        return {...item,data:CardData}
+      }
+      return item;
+    }
+    ))
+    console.log(CardData,'Update #3Zpes')
+  }
+  const AddList = (card: string,group:string) => {
+    const data = card == Cards.Time ? new Date(12).toISOString() : String(null)
+    const NewData:localCardData={id:Math.random().toString(),card,group,data:[data]}
+    console.log(itemdata, "on addlist",'\n\n\n')
+    UpdateList([...itemdata,NewData])
   }
   
   const RemoveList = (card: string) => {
-    UpdateList(itemdata.filter(item=>item!==card))    // bug same mutile card of same type delete together
-    console.log(itemdata, "on removelist")
+    UpdateList(itemdata.filter(item=>item.id!==card))    // bug same mutile card of same type delete together
+    console.log(card, "on removelist")
   }
   
   const ChangeFocus = (state: string) => {
@@ -58,26 +80,55 @@ export const Preset_edit_screen = () => {
   }
   
   
-  const GetCard = (item: string): React.ReactElement | null => {
+  const GetCard = (item: string, cardID:string,cardData:string[]): React.ReactElement | null => {
     if (item == Cards.Name) {
-      return <NameCard Remover={(card)=>RemoveList(card)}/>
+      return <NameCard 
+      Remover={(card)=>RemoveList(card)} 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      id={cardID} 
+      data={cardData}
+
+      />
     }
     if (item == Cards.Week) {
-      return <WeeksCard Remover={(card)=>RemoveList(card)}/>
+      return <WeeksCard 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      Remover={(card)=>RemoveList(card)} 
+      data={cardData} 
+      id={cardID} 
+      />
     }
     if (item == Cards.Days) {
-      return <DaysCard Remover={(card)=>RemoveList(card)}/>
+      return <DaysCard 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      Remover={(card)=>RemoveList(card)} 
+      data={cardData}
+      id={cardID} 
+      />
     }
     if (item == Cards.Time) {
-      return <TimeCard Remover={(card)=>RemoveList(card)}/>
+      return <TimeCard 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      Remover={(card)=>RemoveList(card)} 
+      data={cardData}
+      id={cardID} 
+      TimePeriod={false}
+      />
     }
     if (item == Cards.Month) {
-      return <MonthsCard Remover={(card)=>RemoveList(card)}/>
+      return <MonthsCard 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      Remover={(card)=>RemoveList(card)} 
+      data={cardData}
+      id={cardID} 
+      />
     }
     return null
   }
 
   const Preset_card_section = (type: string, title: string) => {
+    const Data = itemdata.filter(item=>item.group===type)
+    
     return (
       <TouchableOpacity
         style={styles.PresetContainer}
@@ -95,18 +146,17 @@ export const Preset_edit_screen = () => {
         {focused.toString() == type && (<FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom:20}}
-          data={itemdata}                           // filter this to make individual items on each groups
+          data={Data} 
           renderItem={({ item }) =>
-            GetCard(item)
+            GetCard(item.card,item.id,item.data)
           }
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => item.id}
         />
         )}
       </TouchableOpacity>
     )
   }
 
-  // UI of List and containers of cards in preset setting page
   return (
     <View style={styles.container}>
       {
@@ -143,7 +193,6 @@ export const Preset_edit_screen = () => {
 
   );
 };
-
 
 
 

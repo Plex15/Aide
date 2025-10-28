@@ -57,7 +57,6 @@ export const createTable = (): void => {
       `CREATE TABLE IF NOT EXISTS schedule_rules (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         schedule_id INTEGER,
-        rule_type TEXT NOT NULL,
         value INTEGER NOT NULL,
         FOREIGN KEY (schedule_id) REFERENCES schedules(id) ON DELETE CASCADE
       );`,
