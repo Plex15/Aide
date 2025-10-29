@@ -86,7 +86,6 @@ export const DaysCard = ({id,data,Remover,UpdateData}:CardProp) => {
     else{
       Select([...selected,selection])
     }
-    console.log(selected)
   }
   const DaysButtons= (day:string) =>{
     return(
@@ -128,12 +127,13 @@ export const DaysCard = ({id,data,Remover,UpdateData}:CardProp) => {
 };
 
 export const TimeCard = ({id,data,TimePeriod,Remover,UpdateData}:CardProp) =>{
-  const date = new Date(data[0]);
+  const date_1 = new Date(data.length<0?data[0]:Date.now());
+  const date_2 = new Date(data.length<1?data[1]:Date.now());
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [TimeForm, ToggleForm] = useState(false);
-  const [value_1, onChange1] = useState(date);
-  const [value_2, onChange2] = useState(date);
+  const [value_1, onChange1] = useState(date_1);
+  const [value_2, onChange2] = useState(date_2);
   useEffect(()=>{UpdateData([value_1.toISOString(),value_2.toISOString()],id)},[value_1])
   TimePeriod = TimeForm
   
@@ -168,21 +168,10 @@ export const TimeCard = ({id,data,TimePeriod,Remover,UpdateData}:CardProp) =>{
     <View style={[general_style.RawRow,general_style.RawSection]}>
       <TouchableOpacity style={[general_style.Buttons,Time_sp_style.Button]} onPress={()=>ToggleForm(value=>!value)} >
         <Text style={TimePeriod?Time_sp_style.ButtonsTexts:[Time_sp_style.ButtonsTexts]}>
-          {TimePeriod?'Time Period':'Spcific Time'}
+          {TimePeriod?'Time Period':'Specific Time'}
         </Text>
       </TouchableOpacity>
 
-      <View style={[general_style.row_container]}>
-          {/* <TouchableOpacity style={[general_style.Buttons]} onPress={()=>setOpen1(true)}>
-            <Text style={general_style.ButtonsTexts}>Change</Text>
-        </TouchableOpacity>
-
-        {TimePeriod && 
-          <TouchableOpacity style={[general_style.Buttons]} onPress={()=>setOpen2(true)}>
-            <Text style={general_style.ButtonsTexts}>Change</Text>
-        </TouchableOpacity>} */}
-
-      </View>
     </View>
       <DatePicker modal mode='time' open={open1} date={value_1} 
         onConfirm={(selectedDate) => {
@@ -323,6 +312,7 @@ const general_style = StyleSheet.create({
     borderColor: 'black',
     borderBottomWidth: 2,
     minWidth:130,
+    maxWidth:130,
     marginLeft:10,
     marginVertical:2,
     borderRadius:5,

@@ -29,11 +29,12 @@ export enum CardContiner {
 // Note: currently it used with navigation 
 // to pass task_id for task specific data retrive i called from:
 // preset_ui -> Preset_container => Preset_edit_screen (current) pass task_id parameter from preset_ui
+
 type localCardData ={
-  id   : string,
+  id   : number, //unique number
   card : string,
   group: string,
-  data : string[], 
+  data : string[],  //string array
 }
 
 
@@ -41,8 +42,8 @@ export const Preset_edit_screen = () => {
   
   const [itemdata,UpdateList] = useState<localCardData[]>(
     [
-      {id:Math.random().toString(),card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
-      {id:Math.random().toString(),card:Cards.Time,group:CardContiner.Schedule,data:[new Date(Date.now()).toDateString()]} 
+      {id:Math.random(),card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
+      {id:Math.random(),card:Cards.Time,group:CardContiner.Schedule,data:[new Date(12).toISOString()]} 
     ])
   const [focused, OnFocusCards] = useState(["options"])
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -50,23 +51,23 @@ export const Preset_edit_screen = () => {
   
   const UpdateData =(CardData:string[],CardId:string)=>{
     UpdateList(NewData=>NewData.map(
-      item => {if (item.id === CardId){
+      item => {if (item.id.toString() === CardId){
         return {...item,data:CardData}
       }
       return item;
     }
-    ))
-    console.log(CardData,'Update #3Zpes')
+  ))
+  console.log(CardData,'Update #3Zpes')
   }
   const AddList = (card: string,group:string) => {
-    const data = card == Cards.Time ? new Date(12).toISOString() : String(null)
-    const NewData:localCardData={id:Math.random().toString(),card,group,data:[data]}
-    console.log(itemdata, "on addlist",'\n\n\n')
+    const data = card == Cards.Time ? new Date(12).toISOString() : String([])
+    const NewData:localCardData={id:Math.random()*100,card,group,data:[data]}
     UpdateList([...itemdata,NewData])
+    console.log(itemdata, "on addlist")
   }
   
   const RemoveList = (card: string) => {
-    UpdateList(itemdata.filter(item=>item.id!==card))    // bug same mutile card of same type delete together
+    UpdateList(itemdata.filter(item=>item.id.toString()!==card))    // bug same mutile card of same type delete together
     console.log(card, "on removelist")
   }
   
@@ -85,13 +86,13 @@ export const Preset_edit_screen = () => {
       return <NameCard 
       Remover={(card)=>RemoveList(card)} 
       UpdateData={(data,id)=>UpdateData(data,id)}
-      id={cardID} 
+      id={cardID}
       data={cardData}
 
       />
     }
     if (item == Cards.Week) {
-      return <WeeksCard 
+      return <WeeksCard
       UpdateData={(data,id)=>UpdateData(data,id)}
       Remover={(card)=>RemoveList(card)} 
       data={cardData} 
@@ -148,9 +149,9 @@ export const Preset_edit_screen = () => {
           contentContainerStyle={{paddingBottom:20}}
           data={Data} 
           renderItem={({ item }) =>
-            GetCard(item.card,item.id,item.data)
+            GetCard(item.card,item.id.toString(),item.data)
           }
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
         />
         )}
       </TouchableOpacity>
@@ -187,8 +188,14 @@ export const Preset_edit_screen = () => {
         onAddItem={AddList}
         onClose={() => setMenuVisible(false)}
         ContinerGroup={CardGroup}
+        data={itemdata.map(item=>item.card)}
       />)
       }
+      <View style={styles.overlay}>
+        <TouchableOpacity style={styles.Buttons}>
+          <Text style={styles.Buttontext}>Save</Text>
+        </TouchableOpacity>
+      </View>
     </View>
 
   );
@@ -227,18 +234,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     minHeight:40,
   },
-  // input: {
-  //   backgroundColor: '#1d1d1aff',
-  //   color: '#ffffffff',
-  //   height: 10,
-  //   width: '40%',
-  //   borderColor: 'black',
-  //   borderWidth: 1,
-  //   padding: 10,
-  //   justifyContent: 'center',
-  //   marginLeft: 30,
-  //   marginTop: 7,
-  // },
   menuBar: {
     width: 25,
     height: 20,
@@ -246,6 +241,36 @@ const styles = StyleSheet.create({
     margin: 3,
     borderRadius:10,
     alignContent:'flex-end'
-
+    
+  },
+  Buttontext: {
+    color: '#e9e39cff',
+    fontSize: 20,
+    fontFamily:'monospace',
+    paddingHorizontal:10,
+    paddingVertical:4
+    
+  },
+  overlay: {
+    // flexWrap:'wrap',
+    // flexBasis:20,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    marginVertical:"78%",
+    marginLeft:"70%",
+    justifyContent: 'flex-end',
+    alignContent:'flex-end',
+    alignItems: 'center',
+    // backgroundColor:"#0000008b"
+  },
+  Buttons:{
+    backgroundColor:'#9a7d1dff',
+    borderWidth:2,
+    borderRadius:10,
+    borderColor:'#493115a5',
+    justifyContent:'center'
   },
 });
