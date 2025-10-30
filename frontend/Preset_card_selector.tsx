@@ -50,7 +50,6 @@ export const QuickAddMenu = ({ onAddItem, onClose, ContinerGroup ,data }:QuickAd
 };
 
 const CloseMenu =(onClose:()=>void)=>{
-  console.log("damn close alrady")
   onClose()
   return null
 }
@@ -71,7 +70,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    // The rest of the styles are for positioning the menuContainer
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor:'#52404053'

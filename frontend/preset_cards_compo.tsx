@@ -1,3 +1,4 @@
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import React,{useEffect, useState} from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
@@ -42,7 +43,7 @@ export const NameCard= ({id,data,Remover,UpdateData}:CardProp) => {
       </View>
       <View style={general_style.Section}>
         <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)} >
-          <Text style={general_style.ButtonsTexts}>X</Text>
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -68,7 +69,7 @@ export const WeeksCard= ({id,data,Remover,UpdateData}:CardProp) => {
       </View>
       <View style={general_style.Section}>
         <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)}>
-          <Text style={general_style.ButtonsTexts}>X</Text>
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
         </TouchableOpacity>
       </View>
       
@@ -109,7 +110,7 @@ export const DaysCard = ({id,data,Remover,UpdateData}:CardProp) => {
         </View>
           <View style={general_style.Section}>
           <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)} >
-            <Text style={general_style.ButtonsTexts}>X</Text>
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -161,7 +162,7 @@ export const TimeCard = ({id,data,TimePeriod,Remover,UpdateData}:CardProp) =>{
       </View>
         <View style={[general_style.Section]}>
           <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)} >
-            <Text style={general_style.ButtonsTexts}>X</Text>
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
           </TouchableOpacity>
         </View>
     </View>
@@ -227,7 +228,7 @@ export const MonthsCard = ({id,data,Remover,UpdateData}:CardProp) => {
         </View>
         <View style={general_style.Section}>
           <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)}>
-            <Text style={general_style.ButtonsTexts}>X</Text>
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
           </TouchableOpacity>
         </View>
       </View>
@@ -316,9 +317,13 @@ const general_style = StyleSheet.create({
     marginLeft:10,
     marginVertical:2,
     borderRadius:5,
-    
-    
-  }
+  },
+  iconClose:{
+    color:'#ffffffff',
+    fontSize:15,
+    textAlign:'center',
+    marginVertical:3
+  },
 });
 
 const days_sp_style=StyleSheet.create({

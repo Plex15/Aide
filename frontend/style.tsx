@@ -2,33 +2,7 @@ import {StyleSheet} from 'react-native';
 // import { Color } from 'react-native/types_generated/Libraries/Animated/AnimatedExports';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#2B2B2B',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 15,
-    backgroundColor: '#2B2B2B',
-  },
-  logo: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#D4AF37',
-  },
-  menuButton: {
-    padding: 10,
-  },
-  menuBar: {
-    width: 25,
-    height: 3,
-    backgroundColor: '#D4AF37',
-    marginVertical: 3,
-  },
+
   scrollContent: {
     flex: 1,
     paddingHorizontal: 15,
@@ -75,17 +49,23 @@ export const styles = StyleSheet.create({
     color: '#888',
     fontSize: 10,
   },
-  bottomSection: {
-    flexDirection: 'row',
-    marginBottom: 15,
-    gap: 10,
-  },
   progressionCard: {
     flex: 1,
+    width:10,
     backgroundColor: '#4A4A2A',
     borderRadius: 15,
     padding: 15,
     alignItems: 'center',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#2B2B2B',
+  },
+  bottomSection: {
+    flexDirection: 'row',
+    marginBottom: 30,
+    alignContent:'space-evenly',
+    gap: 10,
   },
   circleContainer: {
     marginBottom: 10,
@@ -261,66 +241,6 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
-    marginBottom: 20,
-  },
-  navButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#D4AF37',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  homeIcon: {
-    width: 30,
-    height: 30,
-  },
-  homeIconRoof: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 15,
-    borderRightWidth: 15,
-    borderBottomWidth: 15,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#2B2B2B',
-  },
-  homeIconBase: {
-    width: 20,
-    height: 15,
-    backgroundColor: '#2B2B2B',
-    marginLeft: 5,
-  },
-  editIcon: {
-    width: 30,
-    height: 30,
-    position: 'relative',
-  },
-  editIconSquare: {
-    width: 20,
-    height: 20,
-    borderWidth: 2,
-    borderColor: '#2B2B2B',
-    position: 'absolute',
-    bottom: 0,
-    left: 5,
-  },
-  editIconPencil: {
-    width: 15,
-    height: 3,
-    backgroundColor: '#2B2B2B',
-    transform: [{ rotate: '45deg' }],
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
-
 
   // Preset
 

@@ -8,18 +8,20 @@ import { RootStackParamList } from './App';
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
 export type preset_list={
-  name:string,
+  id:number,
+  title:string,
   desc:string,
+  is_active?:boolean,
   time:Date
 }
 
 
-export const PresetContainers =({name,desc,time}:preset_list)=>{
+export const PresetContainers =({id,title,desc,time}:preset_list)=>{
   const nav = useNavigation<NavigationProps>()
   return(
-    <TouchableOpacity activeOpacity={.7} style={preset_style.itemContainer} onPress={()=>nav.navigate('Presetsetting')}>
+    <TouchableOpacity activeOpacity={.7} style={preset_style.itemContainer} onPress={()=>nav.navigate('Presetsetting',{id:id})}>
     <View style={preset_style.textContainer}>
-        <Text style={preset_style.name}>{name}</Text>
+        <Text style={preset_style.name}>{title}</Text>
         <Text style={preset_style.lastMessage}>{desc}</Text>
     </View>
     <View style={preset_style.infoContainer}>

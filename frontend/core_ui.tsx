@@ -1,6 +1,5 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import {UI} from './main_ui';
-import {Dimensions}from 'react-native';
 
 //const { width } = Dimensions.get('window');
 

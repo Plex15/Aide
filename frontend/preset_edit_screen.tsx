@@ -1,8 +1,10 @@
 // Preset Continers for Cards 
 // which used for Preset Customization of a task
 
-import React, {useState } from 'react';
+import React, {useState,Dispatch,SetStateAction} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
+import { SaveData } from './preset_DB_save';
 import { QuickAddMenu } from './Preset_card_selector';
 import {
   NameCard,
@@ -11,6 +13,7 @@ import {
   TimeCard,
   MonthsCard,
 } from './preset_cards_compo';
+import { GetCardData } from './src/services/card_DB';
 
 export enum Cards {
   Name="NameCard",
@@ -30,21 +33,37 @@ export enum CardContiner {
 // to pass task_id for task specific data retrive i called from:
 // preset_ui -> Preset_container => Preset_edit_screen (current) pass task_id parameter from preset_ui
 
-type localCardData ={
+export type LocalDataHook = [
+  localCardData[],
+  Dispatch<SetStateAction<localCardData[]>>
+];
+
+export type localCardData ={
   id   : number, //unique number
   card : string,
   group: string,
   data : string[],  //string array
 }
 
+let procdata:any
+const getdata= async() => {
+  const data = await GetCardData()
+  console.log(data)
+  procdata = data[0]
+}
+getdata()
 
-export const Preset_edit_screen = () => {
-  
+export const LocalCard=():LocalDataHook=>{
   const [itemdata,UpdateList] = useState<localCardData[]>(
-    [
-      {id:Math.random(),card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
-      {id:Math.random(),card:Cards.Time,group:CardContiner.Schedule,data:[new Date(12).toISOString()]} 
-    ])
+  [
+    {id:Math.random(),card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
+    {id:Math.random(),card:Cards.Time,group:CardContiner.Schedule,data:[new Date(12).toISOString()]} 
+  ])
+  return [itemdata,UpdateList]
+}
+
+export const Preset_edit_screen = (id:number) => {
+  const [itemdata,UpdateList] = LocalCard() 
   const [focused, OnFocusCards] = useState(["options"])
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [CardGroup,setGroup] = useState(String);
@@ -141,7 +160,10 @@ export const Preset_edit_screen = () => {
           <TouchableOpacity
             style={styles.menuBar}
             onPress={() => [setMenuVisible(true),setGroup(type)]} 
-          />
+          >
+            <FontAwesome6 name='plus' iconStyle='solid' style={styles.iconAdd}/>
+          </TouchableOpacity>
+
         </View>
 
         {focused.toString() == type && (<FlatList
@@ -192,7 +214,7 @@ export const Preset_edit_screen = () => {
       />)
       }
       <View style={styles.overlay}>
-        <TouchableOpacity style={styles.Buttons}>
+        <TouchableOpacity style={styles.Buttons} onPress={()=>SaveData(itemdata,false)}>
           <Text style={styles.Buttontext}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -219,8 +241,11 @@ const styles = StyleSheet.create({
     minWidth: '98%',
     borderRadius: 10,
     minHeight: 60,
-    // justifyContent:'space-between',
-    // alignItems:'center'
+  },
+  iconAdd:{
+    fontSize:15,
+    textAlign:'center',
+    color:'#000000d4'
   },
   row_container: {
     flexDirection:"row",
@@ -236,7 +261,6 @@ const styles = StyleSheet.create({
   },
   menuBar: {
     width: 25,
-    height: 20,
     backgroundColor: '#D4AF37',
     margin: 3,
     borderRadius:10,
@@ -244,8 +268,9 @@ const styles = StyleSheet.create({
     
   },
   Buttontext: {
-    color: '#e9e39cff',
+    color: '#000000ff',
     fontSize: 20,
+    fontWeight:'bold',
     fontFamily:'monospace',
     paddingHorizontal:10,
     paddingVertical:4
@@ -267,7 +292,7 @@ const styles = StyleSheet.create({
     // backgroundColor:"#0000008b"
   },
   Buttons:{
-    backgroundColor:'#9a7d1dff',
+    backgroundColor:'#D4AF37',
     borderWidth:2,
     borderRadius:10,
     borderColor:'#493115a5',

@@ -3,6 +3,7 @@ import {TouchableOpacity, Text, View,  ScrollView,} from 'react-native';
 import {styles} from "./style"
 import { onDisplayNotification } from './notification';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BottomTabBar, createBottomTabNavigator, useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { RootStackParamList } from './App';
 import {useNavigation,} from '@react-navigation/native';
 
@@ -31,6 +32,7 @@ export  function UI({
 }:UIprop)
 {  
   const navi = useNavigation<NavigationProps>();
+  const naviTabs = createBottomTabNavigator()
   return (
     <View style={styles.container}>
 
@@ -133,23 +135,6 @@ export  function UI({
               <Text style={styles.addButtonText}>+</Text>
             </TouchableOpacity>
           </View>
-        </View>
-
-        {/* Bottom Navigation */}
-        <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate("Home",{name:"User"})} >
-            <View style={styles.homeIcon}>
-              <View style={styles.homeIconRoof} />
-              <View style={styles.homeIconBase} />
-              
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navButton} onPress={() =>navi.navigate('Preset')}>
-            <View style={styles.editIcon}>
-              <View style={styles.editIconPencil} />
-              <View style={styles.editIconSquare} />
-            </View>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

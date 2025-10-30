@@ -2,7 +2,6 @@
 
 import { openDatabase, SQLiteDatabase, ResultSet } from 'react-native-sqlite-storage';
 
-
 // Step 1: Define the "shape" of your data with an interface.
 // This is your contract for what a Schedule object looks like in your app.
 export interface Schedule {
@@ -28,6 +27,7 @@ const db: SQLiteDatabase = openDatabase(
     location: 'default',
   },
   () => {
+    
     console.log('Database connection opened successfully.');
   },
   (error) => {
@@ -35,74 +35,36 @@ const db: SQLiteDatabase = openDatabase(
   }
 );
 
-// This function's return type is 'void' because it doesn't return anything.
-export const createTable = (): void => {
-  db.transaction(txn => {
-    // Note: SQLite doesn't have a true BOOLEAN type. We use INTEGER 0 for false and 1 for true.
-    txn.executeSql(
-      `CREATE TABLE IF NOT EXISTS schedules (
-        task_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title VARCHAR(255) NOT NULL,
-        description TEXT,
-        is_active INTEGER DEFAULT 1
-      );`,
-      [],
-      () => {
-        console.log('Schedules table created successfully.');
-      },
-      error => {
-        console.error('Error creating schedules table: ', error);
-      }
-    );
 
-    txn.executeSql(
-      `CREATE TABLE IF NOT EXISTS task_card (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        schedule_id INTEGER,
-        card TEXT NOT NULL,
-        card_group TEXT NOT NULL,
-        data Text,
-        FOREIGN KEY (schedule_id) REFERENCES schedules(task_id) ON DELETE CASCADE
-      );`,
-      [],
-      () => {
-        console.log('Schedule_rules table created successfully.');
-      },
-      error => {
-        console.error('Error creating schedule_rules table: ', error);
-      }
-    );
-  });
-};
-
-//function to insert
-
-export const addSchedule = (title: string, desc: string, is_active = true): Promise<number> => {
+export const AddCard = (id:number,card: string, card_group:string,data:string[]): Promise<number> => {
+  const JsonString = JSON.stringify(data); 
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
       txn.executeSql(
-        `INSERT INTO schedules (title, description, is_active) VALUES (?, ?, ?);`,
-        [title, desc, is_active ? 1 : 0],
+        `INSERT INTO task_card (card, card_group, data) VALUES (?, ?, ?);`,
+        [card, card_group, JsonString],
         (_, result) => resolve(result.insertId as number),
         (_, error) => { reject(error); return false; }
       );
     });
-  });
+  }
+);
 };
 
-//Updation :)
 
-export const TurnOffTask = (id: number, is_active: boolean): Promise<void> => {
+export const UpdateCard = (id: number, data:string[]): Promise<void> => {
+    const JsonString = JSON.stringify(data); 
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
       txn.executeSql(
-        `UPDATE schedules SET is_active = ? WHERE id = ?;`,
-        [is_active ? 1 : 0, id],
+        `UPDATE task_card SET data = ? WHERE id = ?;`,
+        [JsonString, id],
         () => resolve(),
         (_, error) => { reject(error); return false; }
       );
     });
   });
+
 };
 
 // Deletion
@@ -124,22 +86,23 @@ export const deleteSchedule = (id: number): Promise<void> => {
 
 // This function now guarantees it will return a Promise that resolves
 // with an array of Schedule objects.
-export const getSchedules = (): Promise<Schedule[]> => {
+export const GetCardData = (): Promise<TaskPreset[]> => {
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
       txn.executeSql(
-        'SELECT * FROM schedules;',
+        'SELECT * FROM task_card;',
         [],
         (_, results: ResultSet) => {
-          const schedules: Schedule[] = [];
+          const schedules: TaskPreset[] = [];
           for (let i = 0; i < results.rows.length; i++) {
             const row = results.rows.item(i);
             schedules.push({
-              id: row.task_id,
-              title: row.title,
-              desc: row.description,
-              // Convert the INTEGER from the DB (0 or 1) to a JS boolean
-              is_active: row.is_active === 1,
+              id:row.id,
+              schedule_id:row.schedule_id,
+              card:row.card,
+              card_group:row.card_group, 
+              data:row.data
+              
             });
           }
           resolve(schedules);
@@ -151,4 +114,3 @@ export const getSchedules = (): Promise<Schedule[]> => {
     });
   });
 };
-
