@@ -4,7 +4,7 @@
 import React, {useState,Dispatch,SetStateAction} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { SaveData } from './preset_DB_save';
+import { GetData, SaveData } from './preset_DB_save';
 import { QuickAddMenu } from './Preset_card_selector';
 import {
   NameCard,
@@ -14,6 +14,10 @@ import {
   MonthsCard,
 } from './preset_cards_compo';
 import { GetCardData } from './src/services/card_DB';
+import { PresetScreenProps } from './App';
+
+
+
 
 export enum Cards {
   Name="NameCard",
@@ -39,31 +43,33 @@ export type LocalDataHook = [
 ];
 
 export type localCardData ={
-  id   : number, //unique number
-  card : string,
-  group: string,
-  data : string[],  //string array
+  id     : number, //unique number
+  schedule_id: number,
+  card   : string,
+  group  : string,
+  data   : string[],  //string array
 }
 
-let procdata:any
+let rawdata:any
 const getdata= async() => {
   const data = await GetCardData()
-  console.log(data)
-  procdata = data[0]
+  rawdata = data
+  console.log(data,"raw card data")
 }
 getdata()
 
-export const LocalCard=():LocalDataHook=>{
-  const [itemdata,UpdateList] = useState<localCardData[]>(
-  [
-    {id:Math.random(),card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
-    {id:Math.random(),card:Cards.Time,group:CardContiner.Schedule,data:[new Date(12).toISOString()]} 
-  ])
+export const LocalCard=(data:localCardData[]):LocalDataHook=>{
+  const [itemdata,UpdateList] = useState<localCardData[]>(data)
+  // [
+  //   {id:Math.random(),schedule_id:1,card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
+  //   {id:Math.random(),schedule_id:1,card:Cards.Time,group:CardContiner.Schedule,data:[new Date(12).toISOString()]} 
+  // ])
   return [itemdata,UpdateList]
 }
 
-export const Preset_edit_screen = (id:number) => {
-  const [itemdata,UpdateList] = LocalCard() 
+export const Preset_edit_screen = ({route}:PresetScreenProps) => {
+  const schedule_id = route.params.id
+  const [itemdata,UpdateList] = LocalCard(rawdata[0]==null?rawdata:GetData(schedule_id,rawdata)) 
   const [focused, OnFocusCards] = useState(["options"])
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [CardGroup,setGroup] = useState(String);
@@ -80,7 +86,7 @@ export const Preset_edit_screen = (id:number) => {
   }
   const AddList = (card: string,group:string) => {
     const data = card == Cards.Time ? new Date(12).toISOString() : String([])
-    const NewData:localCardData={id:Math.random()*100,card,group,data:[data]}
+    const NewData:localCardData={id:Math.random()*100,schedule_id,card,group,data:[data]}
     UpdateList([...itemdata,NewData])
     console.log(itemdata, "on addlist")
   }

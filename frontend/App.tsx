@@ -5,10 +5,12 @@ import { UI_init } from './core_ui';
 import { preset_screen } from './preset_ui';
 import { database_init } from './src/services/core_database';
 import { createStaticNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator,NativeStackHeaderProps } from '@react-navigation/native-stack';
+import { createNativeStackNavigator,NativeStackHeaderProps, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { BottomTabHeaderProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CustomHeader, CustomBottom} from './nav-header-ui';
 import { Preset_edit_screen } from './preset_edit_screen';
+
+export type PresetScreenProps = NativeStackScreenProps<RootStackParamList, 'Presetsetting'>;
 
 export type RootStackParamList = {
   TabNavigator: undefined

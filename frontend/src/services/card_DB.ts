@@ -41,8 +41,8 @@ export const AddCard = (id:number,card: string, card_group:string,data:string[])
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
       txn.executeSql(
-        `INSERT INTO task_card (card, card_group, data) VALUES (?, ?, ?);`,
-        [card, card_group, JsonString],
+        `INSERT INTO task_card (schedule_id,card, card_group, data) VALUES (?,?, ?, ?);`,
+        [id,card, card_group, JsonString],
         (_, result) => resolve(result.insertId as number),
         (_, error) => { reject(error); return false; }
       );
