@@ -10,6 +10,7 @@ export interface Schedule {
   title: string;
   desc: string; // Storing time as a string like '17:00' is common
   is_active: boolean; // In the app, we want a boolean
+  
 }
 
 export interface TaskPreset {
@@ -21,14 +22,40 @@ export interface TaskPreset {
 }
 
 
-// Give the db object its type for better autocompletion
-const db: SQLiteDatabase = openDatabase(
+const enableForeignKeys = (db: SQLiteDatabase): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        db.transaction(txn => {
+            txn.executeSql(
+                'PRAGMA foreign_keys = ON;',
+                [],
+                // Ensure it resolves upon success
+                () => { resolve(); }, 
+                (tx, error) => { 
+                    console.error("Failed to enable Foreign Keys:", error);
+                    reject(error);
+                    return true;
+                }
+            );
+        });
+    });
+};
+
+export const db: SQLiteDatabase = openDatabase(
   {
     name: 'schedule.db',
     location: 'default',
   },
-  () => {
+  async () => {
     console.log('Database connection opened successfully.');
+    try {
+        await enableForeignKeys(db); 
+        console.log('Foreign Key Constraints are now ENABLED.');
+        
+        await createTable(); 
+
+    } catch (e) {
+        console.error('CRITICAL: Foreign Keys failed to enable on startup.');
+    }
   },
   (error) => {
     console.error('Error opening database: ', error);
@@ -36,9 +63,9 @@ const db: SQLiteDatabase = openDatabase(
 );
 
 // This function's return type is 'void' because it doesn't return anything.
-export const createTable = (): void => {
+export const createTable = (): Promise<void> => {
+  return new Promise((resolve, reject)=>{
   db.transaction(txn => {
-    // Note: SQLite doesn't have a true BOOLEAN type. We use INTEGER 0 for false and 1 for true.
     txn.executeSql(
       `CREATE TABLE IF NOT EXISTS schedules (
         task_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,8 +77,9 @@ export const createTable = (): void => {
       () => {
         console.log('Schedules table created successfully.');
       },
-      error => {
+      (error) => {
         console.error('Error creating schedules table: ', error);
+        reject(error);
       }
     );
 
@@ -67,14 +95,16 @@ export const createTable = (): void => {
       [],
       () => {
         console.log('Schedule_rules table created successfully.');
+        resolve();
       },
       error => {
         console.error('Error creating schedule_rules table: ', error);
+        reject(error);
       }
     );
   });
+})
 };
-
 //function to insert
 
 export const addSchedule = (title: string, desc: string, is_active = true): Promise<number> => {
@@ -138,7 +168,6 @@ export const getSchedules = (): Promise<Schedule[]> => {
               id: row.task_id,
               title: row.title,
               desc: row.description,
-              // Convert the INTEGER from the DB (0 or 1) to a JS boolean
               is_active: row.is_active === 1,
             });
           }

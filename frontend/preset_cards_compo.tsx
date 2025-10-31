@@ -8,7 +8,7 @@ type CardProp={
   id : string,
   data:string[]
   TimePeriod?: boolean
-  Remover : (card:string) => void
+  Remover : (id:string) => void
   UpdateData : (data:string[],id:string) => void
 
 }
@@ -128,17 +128,19 @@ export const DaysCard = ({id,data,Remover,UpdateData}:CardProp) => {
 };
 
 export const TimeCard = ({id,data,TimePeriod,Remover,UpdateData}:CardProp) =>{
-  const date_1 = new Date(data.length<0?data[0]:Date.now());
-  const date_2 = new Date(data.length<1?data[1]:Date.now());
+  const form_0:boolean = JSON.parse(data[0]);
+  const date_1 = new Date(data[1]);
+  const date_2 = new Date(data[2]);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
-  const [TimeForm, ToggleForm] = useState(false);
+  const [TimeForm, ToggleForm] = useState(form_0);
   const [value_1, onChange1] = useState(date_1);
   const [value_2, onChange2] = useState(date_2);
-  useEffect(()=>{UpdateData([value_1.toISOString(),value_2.toISOString()],id)},[value_1])
+  useEffect(()=>{UpdateData([TimeForm.toString(),value_1.toISOString(),value_2.toISOString()],id)},[value_1,value_2])
+  console.log(TimeForm.toString(),"------on value")
   TimePeriod = TimeForm
   
-
+  
   return(
   <TouchableOpacity activeOpacity={1} style={[general_style.container]}>
     <View style={[general_style.row_container]}>

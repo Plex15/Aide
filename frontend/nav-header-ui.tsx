@@ -5,7 +5,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './App';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import {DebugScreen} from './src/services/Debug_DB.ts'
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 

@@ -1,7 +1,7 @@
 // Preset Continers for Cards 
 // which used for Preset Customization of a task
 
-import React, {useState,Dispatch,SetStateAction} from 'react';
+import React, {useState,Dispatch,SetStateAction, useEffect} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { GetData, SaveData } from './preset_DB_save';
@@ -15,6 +15,7 @@ import {
 } from './preset_cards_compo';
 import { GetCardData } from './src/services/card_DB';
 import { PresetScreenProps } from './App';
+import { database_init } from './src/services/core_database';
 
 
 
@@ -46,33 +47,53 @@ export type localCardData ={
   id     : number, //unique number
   schedule_id: number,
   card   : string,
-  group  : string,
+  card_group  : string,
   data   : string[],  //string array
 }
 
-let rawdata:any
-const getdata= async() => {
-  const data = await GetCardData()
-  rawdata = data
-  console.log(data,"raw card data")
-}
-getdata()
 
-export const LocalCard=(data:localCardData[]):LocalDataHook=>{
-  const [itemdata,UpdateList] = useState<localCardData[]>(data)
-  // [
-  //   {id:Math.random(),schedule_id:1,card:Cards.Month,group:CardContiner.Schedule,data:[]}, 
-  //   {id:Math.random(),schedule_id:1,card:Cards.Time,group:CardContiner.Schedule,data:[new Date(12).toISOString()]} 
-  // ])
-  return [itemdata,UpdateList]
+
+export const LocalCard=(scheduleId:number)=>{
+  //   [{id:1,schedule_id:1,card:Cards.Month,group:CardContiner.Schedule,data:[""]}] 
+  const [itemdata,UpdateList] = useState<localCardData[]>([])
+  const [IsLoading,setIsLoading] = useState(true)
+    useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch ALL card data from the database
+        const allCardData = await GetCardData(); 
+        
+        // Filter the data for the current schedule ID
+        const initialData = allCardData.filter(item => item.schedule_id === scheduleId);
+        console.log(initialData)
+        // Initialize the state with the filtered data
+        UpdateList(initialData);
+      } catch (e) {
+        console.error("Failed to fetch initial card data:", e);
+        // Optionally set a flag for error state
+      } finally {
+        setIsLoading(false); // Data loading is complete
+      }
+    };
+    
+    fetchData();
+  }, [scheduleId]);
+  return {itemdata,UpdateList,IsLoading}
 }
 
 export const Preset_edit_screen = ({route}:PresetScreenProps) => {
-  const schedule_id = route.params.id
-  const [itemdata,UpdateList] = LocalCard(rawdata[0]==null?rawdata:GetData(schedule_id,rawdata)) 
-  const [focused, OnFocusCards] = useState(["options"])
+  const schedule_id = route.params.id;
+  const removelist:number[]=[];
+  const {itemdata,UpdateList,IsLoading} = LocalCard(schedule_id) ;
+  const [focused, OnFocusCards] = useState(["options"]);
   const [isMenuVisible, setMenuVisible] = useState(false);
   const [CardGroup,setGroup] = useState(String);
+  if(IsLoading){
+    
+    return(
+      <View style={styles.unloaded}><Text style={styles.iconAdd}>Loading...</Text></View>
+    )
+  }
   
   const UpdateData =(CardData:string[],CardId:string)=>{
     UpdateList(NewData=>NewData.map(
@@ -82,18 +103,23 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
       return item;
     }
   ))
-  console.log(CardData,'Update #3Zpes')
+  // console.log(CardData,'Update #3Zpes')
   }
-  const AddList = (card: string,group:string) => {
+  const AddList = (card: string,card_group:string) => {
     const data = card == Cards.Time ? new Date(12).toISOString() : String([])
-    const NewData:localCardData={id:Math.random()*100,schedule_id,card,group,data:[data]}
+    const NewData:localCardData=
+      card==Cards.Time?
+      {id:Math.random(),schedule_id,card,card_group,data:[String(false),data,data]}:
+      {id:Math.random(),schedule_id,card,card_group,data:[data]}
+      
     UpdateList([...itemdata,NewData])
     console.log(itemdata, "on addlist")
   }
   
-  const RemoveList = (card: string) => {
-    UpdateList(itemdata.filter(item=>item.id.toString()!==card))    // bug same mutile card of same type delete together
-    console.log(card, "on removelist")
+  const RemoveList = (id: string) => {
+    UpdateList(itemdata.filter(item=>item.id.toString()!==id))    // bug same mutile card of same type delete together
+    removelist.push(JSON.parse(id))
+    console.log(id, "on removelist")
   }
   
   const ChangeFocus = (state: string) => {
@@ -133,6 +159,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
       />
     }
     if (item == Cards.Time) {
+      console.log(cardData,cardID,"on time instance-----------------")
       return <TimeCard 
       UpdateData={(data,id)=>UpdateData(data,id)}
       Remover={(card)=>RemoveList(card)} 
@@ -153,7 +180,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
   }
 
   const Preset_card_section = (type: string, title: string) => {
-    const Data = itemdata.filter(item=>item.group===type)
+    const Data = itemdata.filter(item=>item.card_group===type)
     
     return (
       <TouchableOpacity
@@ -220,7 +247,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
       />)
       }
       <View style={styles.overlay}>
-        <TouchableOpacity style={styles.Buttons} onPress={()=>SaveData(itemdata,false)}>
+        <TouchableOpacity style={styles.Buttons} onPress={()=>SaveData(itemdata,removelist,schedule_id)}>
           <Text style={styles.Buttontext}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -238,6 +265,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
     // justifyContent: 'space-around',
+  },
+  unloaded:{
+    flex: 1,
+    backgroundColor:  '#1f1c1cd6',
+    alignItems: 'center',
+
   },
   PresetContainer: {
     marginTop: 5,

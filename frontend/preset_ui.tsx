@@ -1,8 +1,8 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TouchableOpacity,View, Text,FlatList, StyleSheet,} from 'react-native';
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import {  useNavigation,} from '@react-navigation/native';
+import {  useFocusEffect, useNavigation,} from '@react-navigation/native';
 import { RootStackParamList } from './App';
 import { preset_list, PresetContainers  } from './Preset_container';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
@@ -17,26 +17,51 @@ export type LocalDataPreset=[
   UpdatePreset:React.Dispatch<React.SetStateAction<preset_list[]>>
 ]
 
-let procdata:any
-const getdata= async() => {
-  const data = await getSchedules()
-  const data_2 = await GetCardData()
-  console.log(data_2)
-  console.log(data)
-  procdata = data
-}
-getdata()
+// let procdata:any
+// const getdata= async() => {
+//   const data = await getSchedules()
+//   console.log("schdeule raw data fetched")
+//   procdata = data
+// }
+// getdata()
 
-export const LocalPreset=():LocalDataPreset=>{
-  const [Presets,UpdatePreset] = useState<preset_list[]>(procdata)
-  return [Presets,UpdatePreset]
+export const LocalPreset=()=>{
+  const [Presets,UpdatePreset] = useState<preset_list[]>([])
+  // Use useFocusEffect instead of useEffect
+  useFocusEffect(
+    // useCallback prevents an infinite loop and ensures a stable reference
+    useCallback(() => {
+      let isActive = true; // Flag to prevent state update on unmounted component
+      
+      const fetchData = async () => {
+        try {
+          const SchdeuleData = await getSchedules(); 
+          
+          if (isActive) {
+            console.log("Fetching and updating preset list UI.");
+            UpdatePreset(SchdeuleData);
+          }
+        } catch (e) {
+          console.error("Failed to update preset list UI:", e);
+        }
+      };
+      
+      fetchData();
+      
+      // Cleanup function: runs when the screen loses focus
+      return () => {
+        isActive = false;
+      };
+    }, []) // Empty dependency array: runs every time the screen becomes focused
+  );
+  
+  return { Presets, UpdatePreset };
 }
 export function preset_screen() {  
-    const [Presets,UpdatePreset]=LocalPreset()
-    useEffect(()=>{UpdatePreset(procdata),[Presets]})
+    const {Presets}=LocalPreset()
+    
   //   { id:1,name: "Morning Workout", desc: "A quick 15-minute routine.", time: new Date(Date.now())},
-  //   { id:2,name: "Study", desc: "1st 2 modules", time: new Date(Date.now())},
-  // ]
+  //   { id:2,name: "Study", desc: "1st 2 modules", time: new Date(Date.now())},]
   
   const navi = useNavigation<NavigationProps>();
   return (
@@ -49,15 +74,15 @@ export function preset_screen() {
                 id = {item.id}
                 title={item.title}
                 desc={item.desc}
-                time={new Date(Date.now())}
+                // time={new Date(Date.now())}
             />
             
             )}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(index) => index.toString()}
         />
         </View>
-    <View style={style.overlay}>
-      <TouchableOpacity style={style.Buttons} onPress={()=>navi.navigate('Presetsetting',{id:1})}>
+    <View style={style.overlay}>                              
+      <TouchableOpacity style={style.Buttons} onPress={()=>navi.navigate('Presetsetting',{id:0})}>
             <FontAwesome6 name='plus' iconStyle='solid' style={style.iconAdd}/>
       </TouchableOpacity>
     </View>

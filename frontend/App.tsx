@@ -32,9 +32,16 @@ const BottomHeader=(bar:BottomTabHeaderProps)=>{
 
 function Main(){
   useEffect(() => {
-    const startApp = async () => { await database_init(); };
+    const startApp = async () => {
+      try {
+        await database_init();
+        console.log("App startup: Database is fully ready to use.");
+      } catch (e) {
+        console.error("App startup: Failed to initialize database.");
+      }
+    };
     startApp();
-  }, []); 
+  }, []);
 
   const MyTabs = createBottomTabNavigator<BottomTabsParamList>({
     screens: {

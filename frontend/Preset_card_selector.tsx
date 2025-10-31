@@ -22,7 +22,7 @@ type QuickAddMenuProps = {
 };
 
 export const QuickAddMenu = ({ onAddItem, onClose, ContinerGroup ,data }:QuickAddMenuProps) => {
-  console.log(data)
+  // console.log(data)
   return (
     // Use a Pressable to cover the screen and close the menu when tapping outside
     <Pressable style={styles.overlay} onPress={onClose}>

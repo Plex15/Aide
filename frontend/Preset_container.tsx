@@ -12,11 +12,10 @@ export type preset_list={
   title:string,
   desc:string,
   is_active?:boolean,
-  time:Date
 }
 
 
-export const PresetContainers =({id,title,desc,time}:preset_list)=>{
+export const PresetContainers =({id,title,desc}:preset_list)=>{
   const nav = useNavigation<NavigationProps>()
   return(
     <TouchableOpacity activeOpacity={.7} style={preset_style.itemContainer} onPress={()=>nav.navigate('Presetsetting',{id:id})}>
@@ -25,7 +24,7 @@ export const PresetContainers =({id,title,desc,time}:preset_list)=>{
         <Text style={preset_style.lastMessage}>{desc}</Text>
     </View>
     <View style={preset_style.infoContainer}>
-        <Text style={preset_style.timestamp}>{time.getHours()}:{time.getMinutes()}</Text>
+        {/* <Text style={preset_style.timestamp}>{time.getHours()}:{time.getMinutes()}</Text> */}
         <TouchableOpacity style={preset_style.EditButton} > 
           <Text style={preset_style.name}>EDIT</Text>
         </TouchableOpacity>

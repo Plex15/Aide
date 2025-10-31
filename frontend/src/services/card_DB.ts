@@ -1,6 +1,7 @@
 // src/services/Database.ts
 
 import { openDatabase, SQLiteDatabase, ResultSet } from 'react-native-sqlite-storage';
+import { db } from './database';
 
 // Step 1: Define the "shape" of your data with an interface.
 // This is your contract for what a Schedule object looks like in your app.
@@ -21,19 +22,19 @@ export interface TaskPreset {
 
 
 // Give the db object its type for better autocompletion
-const db: SQLiteDatabase = openDatabase(
-  {
-    name: 'schedule.db',
-    location: 'default',
-  },
-  () => {
+// const db: SQLiteDatabase = openDatabase(
+//   {
+//     name: 'schedule.db',
+//     location: 'default',
+//   },
+//   () => {
     
-    console.log('Database connection opened successfully.');
-  },
-  (error) => {
-    console.error('Error opening database: ', error);
-  }
-);
+//     console.log('Database connection opened successfully.');
+//   },
+//   (error) => {
+//     console.error('Error opening database: ', error);
+//   }
+// );
 
 
 export const AddCard = (id:number,card: string, card_group:string,data:string[]): Promise<number> => {
@@ -69,7 +70,7 @@ export const UpdateCard = (id: number, data:string[]): Promise<void> => {
 
 // Deletion
 
-export const deleteSchedule = (id: number): Promise<void> => {
+export const deletecard = (id: number): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
       txn.executeSql(
@@ -101,7 +102,7 @@ export const GetCardData = (): Promise<TaskPreset[]> => {
               schedule_id:row.schedule_id,
               card:row.card,
               card_group:row.card_group, 
-              data:row.data
+              data:JSON.parse(row.data)
               
             });
           }
