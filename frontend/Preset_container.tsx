@@ -1,9 +1,12 @@
-import React,{useState} from 'react';
+import React from 'react';
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { StyleSheet } from "react-native";
 import { TouchableOpacity,View, Text,} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './App';
+import { Deletetask } from './preset_DB_save';
+
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
@@ -11,11 +14,12 @@ export type preset_list={
   id:number,
   title:string,
   desc:string,
+  refetch?: () => Promise<void>,
   is_active?:boolean,
 }
 
 
-export const PresetContainers =({id,title,desc}:preset_list)=>{
+export const PresetContainers =({id,title,desc,refetch}:preset_list)=>{
   const nav = useNavigation<NavigationProps>()
   return(
     <TouchableOpacity activeOpacity={.7} style={preset_style.itemContainer} onPress={()=>nav.navigate('Presetsetting',{id:id})}>
@@ -25,8 +29,8 @@ export const PresetContainers =({id,title,desc}:preset_list)=>{
     </View>
     <View style={preset_style.infoContainer}>
         {/* <Text style={preset_style.timestamp}>{time.getHours()}:{time.getMinutes()}</Text> */}
-        <TouchableOpacity style={preset_style.EditButton} > 
-          <Text style={preset_style.name}>EDIT</Text>
+        <TouchableOpacity style={preset_style.EditButton } onPress={()=>(Deletetask(id,refetch))}> 
+          <FontAwesome6 name="ellipsis-vertical" iconStyle="solid" style={preset_style.icon}/>
         </TouchableOpacity>
     </View> 
     </TouchableOpacity>
@@ -70,6 +74,12 @@ export const preset_style = StyleSheet.create({
   },
   EditButton:{
     color: 'rgba(255, 255, 255, 1)',
-    justifyContent:'center'
+    justifyContent:'center',
+    paddingVertical:10,
+    paddingHorizontal:15,
+  },
+  icon:{
+    color:"hsla(57, 100%, 40%, 1.00)",
+    fontSize:20,
   }
 });

@@ -74,7 +74,7 @@ export const deletecard = (id: number): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
       txn.executeSql(
-        `DELETE FROM schedules WHERE id = ?;`,
+        `DELETE FROM task_card WHERE id = ?;`,
         [id],
         () => resolve(),
         (_, error) => { reject(error); return false; }

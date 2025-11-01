@@ -136,8 +136,8 @@ export const TimeCard = ({id,data,TimePeriod,Remover,UpdateData}:CardProp) =>{
   const [TimeForm, ToggleForm] = useState(form_0);
   const [value_1, onChange1] = useState(date_1);
   const [value_2, onChange2] = useState(date_2);
-  useEffect(()=>{UpdateData([TimeForm.toString(),value_1.toISOString(),value_2.toISOString()],id)},[value_1,value_2])
-  console.log(TimeForm.toString(),"------on value")
+  useEffect(()=>{UpdateData([TimeForm.toString(),value_1.toISOString(),value_2.toISOString()],id)},[value_1,value_2,TimeForm])
+  // console.log(TimeForm.toString(),"------on value")
   TimePeriod = TimeForm
   
   

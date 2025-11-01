@@ -1,18 +1,17 @@
-// This is a UI instance component for User to interact with Scheduled interface
-// Later will be configured to change according to Preset data !! 
-
 import React from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { Title_StComp } from './Screen_style_comp';
+
 
 const FullScreenInterface = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Give me your Data</Text>
-      
+      {Title_StComp("Test-compoent","flex-start")}
       <TextInput
         style={styles.input}
         placeholder="Enter required text"
-      />
+        />
 
     </View>
   );

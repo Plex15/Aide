@@ -17,52 +17,42 @@ export type LocalDataPreset=[
   UpdatePreset:React.Dispatch<React.SetStateAction<preset_list[]>>
 ]
 
-// let procdata:any
-// const getdata= async() => {
-//   const data = await getSchedules()
-//   console.log("schdeule raw data fetched")
-//   procdata = data
-// }
-// getdata()
 
 export const LocalPreset=()=>{
   const [Presets,UpdatePreset] = useState<preset_list[]>([])
-  // Use useFocusEffect instead of useEffect
-  useFocusEffect(
-    // useCallback prevents an infinite loop and ensures a stable reference
+
+  const fetchData = useCallback(async () => {            // to refresh while updating preset list  
+    try {
+      const SchdeuleData = await getSchedules(); 
+      console.log("Fetching and updating preset list UI.");
+      UpdatePreset(SchdeuleData);
+    } catch (e) {
+      console.error("Failed to update preset list UI:", e);
+    }
+  }, [UpdatePreset]); 
+
+  useFocusEffect(             
+    
     useCallback(() => {
-      let isActive = true; // Flag to prevent state update on unmounted component
-      
-      const fetchData = async () => {
-        try {
-          const SchdeuleData = await getSchedules(); 
-          
-          if (isActive) {
-            console.log("Fetching and updating preset list UI.");
-            UpdatePreset(SchdeuleData);
-          }
-        } catch (e) {
-          console.error("Failed to update preset list UI:", e);
+        let isActive = true;
+        
+        if (isActive) {
+           fetchData(); 
         }
-      };
-      
-      fetchData();
-      
-      // Cleanup function: runs when the screen loses focus
-      return () => {
-        isActive = false;
-      };
-    }, []) // Empty dependency array: runs every time the screen becomes focused
+        
+        return () => {
+            isActive = false;
+        };
+    }, [fetchData]) 
   );
   
-  return { Presets, UpdatePreset };
-}
+  //Return the state and fetchData function (as refetch)
+  return { Presets, UpdatePreset, refetch: fetchData }; 
+};
 export function preset_screen() {  
-    const {Presets}=LocalPreset()
+  //   [{ id:2, name: "Study", desc: "1st 2 modules", time: new Date(Date.now())}]
+  const {Presets,refetch}=LocalPreset()
     
-  //   { id:1,name: "Morning Workout", desc: "A quick 15-minute routine.", time: new Date(Date.now())},
-  //   { id:2,name: "Study", desc: "1st 2 modules", time: new Date(Date.now())},]
-  
   const navi = useNavigation<NavigationProps>();
   return (
     <View style={style.container}>
@@ -74,11 +64,12 @@ export function preset_screen() {
                 id = {item.id}
                 title={item.title}
                 desc={item.desc}
-                // time={new Date(Date.now())}
+                refetch={refetch}
+                // is_active={value} //to disable presets
             />
             
             )}
-          keyExtractor={(index) => index.toString()}
+          keyExtractor={(item) => item.id.toString()} 
         />
         </View>
     <View style={style.overlay}>                              
@@ -90,6 +81,12 @@ export function preset_screen() {
   )
 }
 
+// export const Refresh=async()=>{
+//   const {Presets,UpdatePreset}=LocalPreset()
+//   console.log("signel go to this point #43hvu32 ");
+//   // const data = await getSchedules()
+//   UpdatePreset(Presets)
+// }
 
 const style=StyleSheet.create({
   overlay: {

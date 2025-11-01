@@ -5,6 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from './App';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
+import { SetSchedule } from './scheduler';
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
@@ -40,8 +41,9 @@ export const CustomHeader = ({title }:CustomHeaderProps) => {
         <TouchableOpacity activeOpacity={0.9} onPress={()=>nav.canGoBack()? nav.goBack():null}> 
           <Text style={HeaderSty.logo}>{title}</Text> 
         </TouchableOpacity>
+        
         <TouchableOpacity 
-          style={HeaderSty.menuButton}
+          style={HeaderSty.menuButton} onPress={()=>SetSchedule(4)}
         >
           <FontAwesome6 name='bars' iconStyle='solid' style={HeaderSty.menuBar}/>
         </TouchableOpacity>

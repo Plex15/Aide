@@ -4,7 +4,7 @@
 import React, {useState,Dispatch,SetStateAction, useEffect} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import { GetData, SaveData } from './preset_DB_save';
+import { SaveData } from './preset_DB_save';
 import { QuickAddMenu } from './Preset_card_selector';
 import {
   NameCard,
@@ -15,7 +15,6 @@ import {
 } from './preset_cards_compo';
 import { GetCardData } from './src/services/card_DB';
 import { PresetScreenProps } from './App';
-import { database_init } from './src/services/core_database';
 
 
 
@@ -44,11 +43,11 @@ export type LocalDataHook = [
 ];
 
 export type localCardData ={
-  id     : number, //unique number
+  id         : number,   //unique number
   schedule_id: number,
-  card   : string,
-  card_group  : string,
-  data   : string[],  //string array
+  card       : string,
+  card_group : string,
+  data       : string[], //string array
 }
 
 
@@ -82,8 +81,8 @@ export const LocalCard=(scheduleId:number)=>{
 }
 
 export const Preset_edit_screen = ({route}:PresetScreenProps) => {
-  const schedule_id = route.params.id;
-  const removelist:number[]=[];
+  const [schedule_id,UpdateScheduleID] = useState(route.params.id);
+  const [RmList, setRmList] = useState<number[]>([]);
   const {itemdata,UpdateList,IsLoading} = LocalCard(schedule_id) ;
   const [focused, OnFocusCards] = useState(["options"]);
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -118,7 +117,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
   
   const RemoveList = (id: string) => {
     UpdateList(itemdata.filter(item=>item.id.toString()!==id))    // bug same mutile card of same type delete together
-    removelist.push(JSON.parse(id))
+    setRmList([...RmList,Number(JSON.parse(id))])
     console.log(id, "on removelist")
   }
   
@@ -159,7 +158,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
       />
     }
     if (item == Cards.Time) {
-      console.log(cardData,cardID,"on time instance-----------------")
+      // console.log(cardData,cardID,"on time instance-----------------")
       return <TimeCard 
       UpdateData={(data,id)=>UpdateData(data,id)}
       Remover={(card)=>RemoveList(card)} 
@@ -199,7 +198,8 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
 
         </View>
 
-        {focused.toString() == type && (<FlatList
+        {focused.toString() == type && (
+          <FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingBottom:20}}
           data={Data} 
@@ -237,6 +237,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
         "Screen"
       )
       }
+ 
 
 
       {isMenuVisible && (<QuickAddMenu
@@ -247,7 +248,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
       />)
       }
       <View style={styles.overlay}>
-        <TouchableOpacity style={styles.Buttons} onPress={()=>SaveData(itemdata,removelist,schedule_id)}>
+        <TouchableOpacity style={styles.Buttons} onPress={()=>SaveData(itemdata,RmList,setRmList,UpdateScheduleID,schedule_id)}>
           <Text style={styles.Buttontext}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -282,6 +283,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
   },
   iconAdd:{
+    paddingVertical:3,
     fontSize:15,
     textAlign:'center',
     color:'#000000d4'
@@ -302,7 +304,7 @@ const styles = StyleSheet.create({
     width: 25,
     backgroundColor: '#D4AF37',
     margin: 3,
-    borderRadius:10,
+    borderRadius:7,
     alignContent:'flex-end'
     
   },

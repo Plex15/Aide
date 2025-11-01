@@ -109,14 +109,21 @@ export const createTable = (): Promise<void> => {
 
 export const addSchedule = (title: string, desc: string, is_active = true): Promise<number> => {
   return new Promise((resolve, reject) => {
-    db.transaction(txn => {
-      txn.executeSql(
-        `INSERT INTO schedules (title, description, is_active) VALUES (?, ?, ?);`,
-        [title, desc, is_active ? 1 : 0],
-        (_, result) => resolve(result.insertId as number),
-        (_, error) => { reject(error); return false; }
-      );
-    });
+    db.transaction(
+      txn => {
+        txn.executeSql(
+          `INSERT INTO schedules (title, description, is_active) VALUES (?, ?, ?);`,
+          [title, desc, is_active ? 1 : 0],
+          (_, result) => resolve(result.insertId as number),
+          (_, error) => { reject(error); return true; } 
+        );
+      }, 
+      (error) => {
+        console.error("Transaction failed during addSchedule:", error);
+        reject(error);
+      },
+      () => {}
+    );
   });
 };
 
@@ -126,7 +133,7 @@ export const TurnOffTask = (id: number, is_active: boolean): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
       txn.executeSql(
-        `UPDATE schedules SET is_active = ? WHERE id = ?;`,
+        `UPDATE schedules SET is_active = ? WHERE task_id = ?;`,
         [is_active ? 1 : 0, id],
         () => resolve(),
         (_, error) => { reject(error); return false; }
@@ -140,8 +147,9 @@ export const TurnOffTask = (id: number, is_active: boolean): Promise<void> => {
 export const deleteSchedule = (id: number): Promise<void> => {
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
+      console.log(id,"Removed");
       txn.executeSql(
-        `DELETE FROM schedules WHERE id = ?;`,
+        `DELETE FROM schedules WHERE task_id = ?;`,
         [id],
         () => resolve(),
         (_, error) => { reject(error); return false; }
