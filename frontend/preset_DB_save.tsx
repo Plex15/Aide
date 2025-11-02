@@ -17,8 +17,9 @@ export const SaveData=async(
         
         if (!Taskid ) {
             const NameCard = data.filter(item => item.card === Cards.Name);
+            const DescCard = data.filter(item => item.card === Cards.Desc);
             const title: string = NameCard[0].data[0].length > 0 ? NameCard[0].data[0] : "UnNamed";
-            const Desc: string = title;  //change on creating desc card 
+            const Desc : string = DescCard[0].data[0].length > 0 ? DescCard[0].data[0] : "";  
             console.log(NameCard.length,"len(title)");
             
             //console.log(title, "on SaveData");

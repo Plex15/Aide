@@ -7,11 +7,15 @@ import { Cards, CardContiner } from './preset_edit_screen';
 //temp data for database
 //its better to be hardcoded
 const MENU_ITEMS = [
-  { Card: Cards.Name,  group:CardContiner.Options,  label: 'Name',   limit: 1 },
+  { Card: Cards.Name,  group:CardContiner.Options,  label: 'Name',   limit: 1  },
+  { Card: Cards.Desc,  group:CardContiner.Options,  label: 'Desc',   limit: 1  },
   { Card: Cards.Time,  group:CardContiner.Schedule, label: 'Time',   limit: 10 },
   { Card: Cards.Days,  group:CardContiner.Schedule, label: 'Days',   limit: 10 },
-  { Card: Cards.Week,  group:CardContiner.Schedule, label: 'Week',   limit: 1 },
+  { Card: Cards.Week,  group:CardContiner.Schedule, label: 'Week',   limit: 1  },
   { Card: Cards.Month, group:CardContiner.Schedule, label: 'Months', limit: 10 },
+  { Card: Cards.Theme, group:CardContiner.style,    label: 'Theme',  limit: 1  },
+  { Card: Cards.Title, group:CardContiner.style,    label: 'Title',  limit: 1  },
+  { Card: Cards.Space, group:CardContiner.style,    label: 'Spacing',limit: 10 },
 ];
 
 type QuickAddMenuProps = {
@@ -22,19 +26,23 @@ type QuickAddMenuProps = {
 };
 
 export const QuickAddMenu = ({ onAddItem, onClose, ContinerGroup ,data }:QuickAddMenuProps) => {
-  // console.log(data)
+  
   return (
     // Use a Pressable to cover the screen and close the menu when tapping outside
     <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.menuContainer}>
           {MENU_ITEMS
           .filter(item=> item.group == ContinerGroup)
-          .filter(item=> item.limit > CountCards(data,item.Card))
+          // .filter(item=> item.limit > CountCards(data,item.Card))
           .map(item =>(
+            
             <TouchableOpacity
             key={item.Card}
-            style={styles.menuItem}
-            onPress={() => [onAddItem(item.Card,item.group),onClose]}
+            style={[styles.menuItem,item.limit<=CountCards(data,item.Card)&&styles.menuInAct]}
+            onPress={() =>
+              item.limit>CountCards(data,item.Card)&&
+              [onAddItem(item.Card,item.group),onClose]}
+            activeOpacity={item.limit>CountCards(data,item.Card)?0.7:1}
             >
             <View style={styles.RowContainer}>
               <Text style={styles.menuText}>{item.label}</Text>
@@ -92,6 +100,9 @@ const styles = StyleSheet.create({
     backgroundColor:'#5a5050ff',
     borderRadius:3,
     // paddingHorizontal: 15,
+  },
+  menuInAct:{
+    backgroundColor:'#1f1c1cff',
   },
   menuText: {
     fontSize: 16,

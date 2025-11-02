@@ -1,7 +1,8 @@
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import React,{useEffect, useState} from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Modal,Button } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import ColorPicker, { HueSlider, OpacitySlider, Panel1, Preview, Swatches } from 'reanimated-color-picker';
 
 
 type CardProp={
@@ -46,6 +47,37 @@ export const NameCard= ({id,data,Remover,UpdateData}:CardProp) => {
             <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
         </TouchableOpacity>
       </View>
+    </TouchableOpacity>
+  );
+};
+export const DescCard= ({id,data,Remover,UpdateData}:CardProp) => {
+  const [CompactCard,setCompact] = useState(true)
+  return (
+    <TouchableOpacity 
+    activeOpacity={1} 
+    style={[general_style.container,{maxHeight:CompactCard?50:180}]} 
+    onPress={()=>setCompact(pre=>!pre)}
+    >  
+      <View style={general_style.row_container}>
+        <View style={general_style.Section}>
+          <Text style={general_style.title}>Description</Text>
+        </View>
+        <View style={general_style.Section}>
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)}>
+              <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
+          </TouchableOpacity>
+        </View>
+      </View>
+        {!CompactCard&&<TextInput
+          style={general_style.DescBox}
+          multiline={true}
+          scrollEnabled={true}
+          placeholder="This task is to ..."
+          placeholderTextColor="#a9a9a9d3"
+          value={data[0]}
+          onChangeText={(value)=>UpdateData([value],id)}
+          />
+        }
     </TouchableOpacity>
   );
 };
@@ -254,6 +286,149 @@ export const MonthsCard = ({id,data,Remover,UpdateData}:CardProp) => {
   );
 };
 
+
+export const ThemeCard= ({id,data,Remover,UpdateData}:CardProp) => {
+  const [CompactCard,setCompact] = useState(true)
+  const [showModal, setShowModal] = useState(false);
+  const [BgColor, setBG] = useState('#2d2b21ff');
+  const [AccentColor, setAccent] = useState('#9c8527f5');
+  const onSelectColor = (color:any) => setBG(color);
+  useEffect(()=>UpdateData([BgColor,AccentColor],id),[AccentColor,BgColor])
+  return (
+    <TouchableOpacity activeOpacity={1} style={[general_style.container,{maxHeight:CompactCard?50:180}]} onPress={()=>setCompact(pre=>!pre)}>
+      <View style={[general_style.row_container]}>
+        <View style={general_style.Section}>
+        <Text style={general_style.title}>Theme</Text>
+        </View>
+        <View style={general_style.Section}>
+          <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)}>
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {!CompactCard&&<View style={[general_style.Section]}>
+        <View style={[general_style.Section,general_style.row_container]}>
+          <Text style={general_style.title}>BG Color</Text>
+          <TouchableOpacity style={[Screen_sty.ColorBox,{backgroundColor:"#2d2b21ff"}]}/>
+        </View>
+        <View style={[general_style.Section,general_style.row_container]}>
+          <Text style={general_style.title}>Accent</Text>
+          <TouchableOpacity style={[Screen_sty.ColorBox,{backgroundColor:"#9c8527f5"}]} onPress={() => setShowModal(true)}/>
+        </View>
+        </View>}
+      {/* <View>
+        <Modal visible={showModal} animationType='slide'>
+        <ColorPicker style={{ width: '70%' }} value={selectedColor} onComplete={onSelectColor}>
+          <Preview />
+          <Panel1 />
+          <HueSlider />
+          <OpacitySlider />
+          <Swatches />
+        </ColorPicker>
+
+        <Button title='Ok' onPress={() => setShowModal(false)} />
+      </Modal>
+
+      </View> */}
+
+      
+    </TouchableOpacity>
+  );
+};
+
+
+export const TitleCard= ({id,data,Remover,UpdateData}:CardProp) => {
+  const pos = ["Start","Center","End"]
+  const [CompactCard,setCompact] = useState(true)
+  const [pos_index,setInd] = useState<number>(data[0]?JSON.parse(data[0]):1)
+  const [showModal, setShowModal] = useState(false);
+  const [AccentColor, setAccent] = useState('#000000ff');
+  const [Title, setTitle] = useState<string>(data[2]);
+  const onSelectColor = (color:any) => setAccent(color)
+  useEffect(()=>UpdateData([pos_index.toString(),AccentColor,Title],id),[pos_index,AccentColor,Title])
+  const TogglePos =()=>{
+    const index =[0,1,2]
+    const cur_index = index[0]==pos_index?index[1]:index[1]==pos_index?index[2]:index[0]
+    setInd(cur_index)
+  }
+  return (
+    <TouchableOpacity activeOpacity={1} style={[general_style.container,{maxHeight:CompactCard?50:180}]} onPress={()=>setCompact(pre=>!pre)}>
+      <View style={general_style.row_container}>
+      <View style={general_style.Section}>
+        <Text style={general_style.title}>Title</Text>
+      </View>
+      <View style={general_style.Section}>
+        <TextInput
+          style={general_style.TextBox}
+          placeholder="Time-pass"
+          placeholderTextColor="#a9a9a9d3"
+          value={data[2]}
+          onChangeText={(value)=>setTitle(value)}
+          />
+      </View>
+      <View style={general_style.Section}>
+        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)} >
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
+        </TouchableOpacity>
+      </View>
+      </View>
+      {!CompactCard&&<View style={[general_style.Section]}>
+        <View style={[general_style.Section,general_style.row_container]}>
+          <Text style={general_style.title}>Position</Text>
+          <TouchableOpacity style={Screen_sty.BoxConiner} onPress={()=>TogglePos()}>
+          <Text style={general_style.title}>
+            <FontAwesome6 name="chevron-left" iconStyle="solid"/> {pos[pos_index]} <FontAwesome6 name="chevron-right" iconStyle="solid"/>
+          </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[general_style.Section,general_style.row_container]}>
+          <Text style={general_style.title}>Colour</Text>
+          <TouchableOpacity style={[Screen_sty.ColorBox,{backgroundColor:"#9c8527f5"}]} onPress={() => setShowModal(true)}/>
+        </View>
+        </View>}
+      {/* {!CompactCard&&<View style={[general_style.row_container,Screen_sty.subContiner]}>
+      <TouchableOpacity style={[general_style.Section]}>
+        <Text style={general_style.ButtonsTexts}>
+          <FontAwesome6 name="chevron-left" iconStyle="solid"/> Center <FontAwesome6 name="chevron-right" iconStyle="solid"/>
+        </Text>
+      </TouchableOpacity>
+      <View style={Screen_sty.BoxConiner}>
+        <TouchableOpacity style={[Screen_sty.ColorBox,{backgroundColor:"#9c8527f5"}]} onPress={() => setShowModal(true)}>
+            <Text>Color</Text>
+        </TouchableOpacity>
+      </View>
+      </View>} */}
+    </TouchableOpacity>
+  );
+};
+
+export const SpacingCard= ({id,data,Remover,UpdateData}:CardProp) => {
+  return (
+    <TouchableOpacity activeOpacity={1} style={[general_style.container,general_style.row_container]}>
+      <View style={general_style.Section}>
+        <Text style={general_style.title}>Space</Text>
+      </View>
+      <View>
+        <TextInput
+          style={general_style.TextBox}
+          keyboardType='numeric'
+          placeholder="1"
+          placeholderTextColor="#a9a9a9d3"
+          textAlign='center'
+          value={data[0]}
+          onChangeText={(value)=>UpdateData([value],id)}
+          />
+      </View>
+      <View style={general_style.Section}>
+        <TouchableOpacity style={general_style.Buttons} onPress={()=>Remover(id)}>
+            <FontAwesome6 name='xmark' iconStyle='solid' style={general_style.iconClose}/>
+        </TouchableOpacity>
+      </View>
+      
+    </TouchableOpacity>
+  );
+};
+
 const general_style = StyleSheet.create({
   container: {
     marginTop:10,
@@ -315,9 +490,23 @@ const general_style = StyleSheet.create({
     borderColor: 'black',
     borderBottomWidth: 2,
     minWidth:130,
-    maxWidth:130,
     marginLeft:10,
     marginVertical:2,
+    borderRadius:5,
+  },
+  DescBox: {
+    backgroundColor: '#0000000d',
+    textAlign:"left",
+    textShadowColor:"#171714aa",
+    color: '#ffffffff',
+    width: '90%',
+    borderColor: 'black',
+    borderBottomWidth: 2,
+    minWidth:130,
+    minHeight:70,
+    maxHeight:120,
+    marginLeft:10,
+    marginVertical:5,
     borderRadius:5,
   },
   iconClose:{
@@ -328,12 +517,10 @@ const general_style = StyleSheet.create({
   },
 });
 
-const days_sp_style=StyleSheet.create({
-});
+
 const Time_sp_style=StyleSheet.create({
   Section:{
     minHeight:45,
-    // paddingRight:'1%',
     paddingTop:1,
     justifyContent:'center',
     
@@ -356,4 +543,21 @@ const Time_sp_style=StyleSheet.create({
     borderWidth:5,
     borderColor:'#7f7737ff'
   },
+});
+
+const Screen_sty=StyleSheet.create({
+  ColorBox:{
+    width:'50%',
+    height:30,
+    borderRadius:7, 
+  },
+  subContiner:{
+    justifyContent:"center",
+    alignItems:"flex-end",
+    // backgroundColor:'#ffffff86'
+  },
+  BoxConiner:{
+    width:'50%',
+    alignItems:"center",
+  }
 });

@@ -12,6 +12,10 @@ import {
   DaysCard,
   TimeCard,
   MonthsCard,
+  DescCard,
+  ThemeCard,
+  TitleCard,
+  SpacingCard,
 } from './preset_cards_compo';
 import { GetCardData } from './src/services/card_DB';
 import { PresetScreenProps } from './App';
@@ -21,10 +25,15 @@ import { PresetScreenProps } from './App';
 
 export enum Cards {
   Name="NameCard",
+  Desc="DescCard",
   Week="WeekCard",
   Days="DayCard",
   Time="TimeCard",
   Month="MonthCard",
+  Screen="StyleCard",
+  Theme="ThemeCard",
+  Title="TitleCard",
+  Space="SpacingCard",
 }
 
 export enum CardContiner {
@@ -141,6 +150,15 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
 
       />
     }
+    if (item == Cards.Desc) {
+      return <DescCard 
+      Remover={(card)=>RemoveList(card)} 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      id={cardID}
+      data={cardData}
+
+      />
+    }
     if (item == Cards.Week) {
       return <WeeksCard
       UpdateData={(data,id)=>UpdateData(data,id)}
@@ -169,6 +187,30 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
     }
     if (item == Cards.Month) {
       return <MonthsCard 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      Remover={(card)=>RemoveList(card)} 
+      data={cardData}
+      id={cardID} 
+      />
+    }
+    if (item == Cards.Theme) {
+      return <ThemeCard 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      Remover={(card)=>RemoveList(card)} 
+      data={cardData}
+      id={cardID} 
+      />
+    }
+    if (item == Cards.Title) {
+      return <TitleCard 
+      UpdateData={(data,id)=>UpdateData(data,id)}
+      Remover={(card)=>RemoveList(card)} 
+      data={cardData}
+      id={cardID} 
+      />
+    }
+    if (item == Cards.Space) {
+      return <SpacingCard 
       UpdateData={(data,id)=>UpdateData(data,id)}
       Remover={(card)=>RemoveList(card)} 
       data={cardData}
@@ -264,8 +306,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:  '#2B2B2B',
     alignItems: 'center',
-
-    // justifyContent: 'space-around',
   },
   unloaded:{
     flex: 1,
@@ -318,8 +358,6 @@ const styles = StyleSheet.create({
     
   },
   overlay: {
-    // flexWrap:'wrap',
-    // flexBasis:20,
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -330,7 +368,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignContent:'flex-end',
     alignItems: 'center',
-    // backgroundColor:"#0000008b"
   },
   Buttons:{
     backgroundColor:'#D4AF37',
