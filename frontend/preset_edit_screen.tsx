@@ -291,7 +291,7 @@ export const Preset_edit_screen = ({route}:PresetScreenProps) => {
       }
       <View style={styles.overlay}>
         <TouchableOpacity style={styles.Buttons} onPress={()=>SaveData(itemdata,RmList,setRmList,UpdateScheduleID,schedule_id)}>
-          <Text style={styles.Buttontext}>Save</Text>
+          {/* <Text style={styles.Buttontext}>Save</Text> */}
         </TouchableOpacity>
       </View>
     </View>

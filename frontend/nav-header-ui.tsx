@@ -45,13 +45,21 @@ export const CustomHeader = ({title }:CustomHeaderProps) => {
         <TouchableOpacity 
           style={HeaderSty.menuButton} onPress={()=>SetSchedule(4)}
         >
-          <FontAwesome6 name='bars' iconStyle='solid' style={HeaderSty.menuBar}/>
+          {/* <FontAwesome6 name='bars' iconStyle='solid' style={HeaderSty.menuBar}/> */}
+          <Text style={HeaderSty.ButtonsTexts}>SAVE</Text>
         </TouchableOpacity>
       </View>)
 }
 
 
 const HeaderSty= StyleSheet.create({
+    ButtonsTexts:{
+    fontFamily:'monospace',
+    fontSize:15,
+    paddingTop:5,
+    textAlign:'center',
+    color:'#f3e159ff',
+  },
     header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

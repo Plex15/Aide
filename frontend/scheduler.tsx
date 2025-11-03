@@ -18,10 +18,10 @@ export const SetSchedule=(num:number)=>{
     scheduled_time.setSeconds(crt_time.getSeconds()+num);
     console.log(crt_time+"\n"+scheduled_time+"\n\n"); 
     
-    Triggerschedule(scheduled_time); 
+    Triggerschedule(26,scheduled_time); 
     
 }
-export async function Triggerschedule(schedule:Date){
+export async function Triggerschedule(id:Number,schedule:Date){
   console.log(schedule);
   const settings = await notifee.requestPermission();
   if (settings.authorizationStatus < AuthorizationStatus.AUTHORIZED) {
@@ -32,7 +32,7 @@ export async function Triggerschedule(schedule:Date){
     type: TriggerType.TIMESTAMP,
     timestamp: schedule.getTime(), 
     };
-  Schedule_notify(1,trigger)  //1 int is passed as task id reminder to change that ater database set
+  Schedule_notify(id,trigger)  //1 int is passed as task id reminder to change that ater database set
     
 }
 

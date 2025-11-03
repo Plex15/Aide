@@ -1,7 +1,7 @@
 // src/services/Database.ts
 
 import { openDatabase, SQLiteDatabase, ResultSet } from 'react-native-sqlite-storage';
-import { db } from './database';
+import { db, TaskPreset } from './database';
 
 // Step 1: Define the "shape" of your data with an interface.
 // This is your contract for what a Schedule object looks like in your app.
@@ -10,14 +10,6 @@ export interface Schedule {
   title: string;
   desc: string; // Storing time as a string like '17:00' is common
   is_active: boolean; // In the app, we want a boolean
-}
-
-export interface TaskPreset {
-  id: number;
-  schedule_id: number;
-  card: string; // Use string literals for specific types
-  card_group:string;
-  data: string[];
 }
 
 

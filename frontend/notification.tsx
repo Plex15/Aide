@@ -30,10 +30,12 @@ export async function onDisplayNotification() {
     
 }
   
-export async function Schedule_notify(task_id:number,trigger:TimestampTrigger){
+export async function Schedule_notify(task_id:Number,trigger:TimestampTrigger){
   await notifee.createTriggerNotification({
       title: 'Full-screen notification', 
       body: 'Full-screen notification body',
+      data:{task_id:task_id},
+
       android: {
           channelId: 'importent', 
           
@@ -50,7 +52,7 @@ export async function Schedule_notify(task_id:number,trigger:TimestampTrigger){
           
           pressAction: {
             id: 'full_screen_intent', 
-            launchActivity:interact_ui
+            launchActivity:interact_ui,
           },
       },
   },trigger);

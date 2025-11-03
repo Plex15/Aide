@@ -1,11 +1,11 @@
 buildscript {
     ext {
-        buildToolsVersion = "35.0.0"  // Use the correct build tools for SDK 34
+        buildToolsVersion = "35.0.0"  
         minSdkVersion = 24
-        compileSdkVersion = 34      // Use the latest stable SDK
+        compileSdkVersion = 35      // Use the latest stable SDK
         targetSdkVersion = 34       // Match the compile SDK
         ndkVersion = "27.0.11902837"   
-        kotlinVersion = "1.9.23"      // A recent stable Kotlin version
+        kotlinVersion = "1.9.23"      // stable Kotlin version
     }
     repositories {
         google()
